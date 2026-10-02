@@ -1,0 +1,16 @@
+{
+  "name": "Kalo",
+  "short_name": "Kalo",
+  "description": "AI calorie, water & workout tracker",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#070b0a",
+  "theme_color": "#070b0a",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥗%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
