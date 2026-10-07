@@ -81,23 +81,23 @@ DROP POLICY IF EXISTS "Users manage own routines" ON routines;
 DROP POLICY IF EXISTS "Users manage own current_routine" ON current_routine;
 
 CREATE POLICY "Users manage own profile" ON profiles
-  FOR ALL USING (auth.uid() = id)
+  FOR ALL TO authenticated USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "Users manage own logs" ON daily_logs
-  FOR ALL USING (auth.uid() = user_id)
+  FOR ALL TO authenticated USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users manage own meals" ON meals
-  FOR ALL USING (auth.uid() = user_id)
+  FOR ALL TO authenticated USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users manage own routines" ON routines
-  FOR ALL USING (auth.uid() = user_id)
+  FOR ALL TO authenticated USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users manage own current_routine" ON current_routine
-  FOR ALL USING (auth.uid() = user_id)
+  FOR ALL TO authenticated USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 -- ============================================================
@@ -111,7 +111,7 @@ BEGIN
   VALUES (NEW.id);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
@@ -138,7 +138,7 @@ RETURNS BOOLEAN
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
-AS $
+AS $function$
 DECLARE
   v_user_id UUID := auth.uid();
   v_allowed BOOLEAN;
@@ -164,7 +164,7 @@ BEGIN
 
   RETURN v_allowed;
 END;
-$;
+$function$;
 
 REVOKE ALL ON FUNCTION public.consume_ai_request() FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.consume_ai_request() TO authenticated;
