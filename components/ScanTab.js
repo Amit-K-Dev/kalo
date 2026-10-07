@@ -25,6 +25,7 @@ export default function ScanTab({ onAddMeals }) {
   const [hint, setHint] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [found, setFound] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const fcamRef = useRef(null);
@@ -96,14 +97,22 @@ export default function ScanTab({ onAddMeals }) {
     setFound(prev => prev.map((it, i) => i === idx ? { ...it, g: Math.max(0, g) } : it));
   };
 
-  const handleAddAll = () => {
+  const handleAddAll = async () => {
     const items = found.filter(i => i.g > 0).map(i => {
       const c = calc(i);
       return { name: `${i.name} (${i.g} g)`, kcal: c.kcal, p: c.p, c: c.c, f: c.f };
     });
-    onAddMeals(items);
-    setHint("");
-    handleFile(null);
+    if (!items.length || saving) return;
+    setSaving(true);
+    try {
+      const saved = await onAddMeals(items);
+      if (saved !== false) {
+        setHint("");
+        handleFile(null);
+      }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const t = totals();
@@ -174,7 +183,9 @@ export default function ScanTab({ onAddMeals }) {
               </div>
             );
           })}
-          <button className="btn" onClick={handleAddAll}>Add to today&apos;s log</button>
+          <button className="btn" onClick={handleAddAll} disabled={saving}>
+            {saving ? "Saving…" : "Add to today&apos;s log"}
+          </button>
         </div>
       )}
     </section>
