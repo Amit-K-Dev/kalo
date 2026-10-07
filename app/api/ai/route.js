@@ -73,17 +73,17 @@ export async function POST(request) {
     return NextResponse.json({ error: "Image too large" }, { status: 413 });
   }
 
+  if (!process.env.OPENROUTER_API_KEY) {
+    console.error("OPENROUTER_API_KEY is not set");
+    return NextResponse.json({ error: "Server not configured" }, { status: 500 });
+  }
+
   const { data: allowed, error: rateLimitError } = await supabase.rpc("consume_ai_request");
   if (rateLimitError) {
     console.error("AI rate limit is unavailable:", rateLimitError.message);
     return NextResponse.json({ error: "Meal estimation is temporarily unavailable" }, { status: 503 });
   }
   if (!allowed) return NextResponse.json({ error: "Hourly AI request limit reached" }, { status: 429 });
-
-  if (!process.env.OPENROUTER_API_KEY) {
-    console.error("OPENROUTER_API_KEY is not set");
-    return NextResponse.json({ error: "Server not configured" }, { status: 500 });
-  }
 
   const content = [];
   if (imageData) {
