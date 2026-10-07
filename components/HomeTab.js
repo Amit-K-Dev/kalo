@@ -1,28 +1,7 @@
 "use client";
-import { useMemo } from "react";
-import { PLANS, planCalc, dkey, waterGoal } from "@/lib/nutrition";
-import { estimateWorkout } from "@/lib/exercises";
 
-export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, heightCm, hist, targets, curRoutine, sumMeals, switchTab, onWaterAdd, profile }) {
-  const eaten = sumMeals("kcal");
-  const left = goal - eaten;
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const todayHist = hist[todayKey] || {};
-
-  // BMI
-  const bmi = heightCm > 0 && weightKg > 0 ? weightKg / ((heightCm / 100) ** 2) : 0;
-  const bmiCat = bmi < 18.5 ? ["Underweight", "#4f9ad9"] : bmi < 25 ? ["Healthy", "#3fb27f"] : bmi < 30 ? ["Overweight", "#f0a63a"] : ["Obese", "#d2473c"];
-
-  const sess = todayHist.wk || 0;
-  const circ = 326.7;
-
-  const days = useMemo(() => [6, 5, 4, 3, 2, 1, 0].map(n => {
-    const k = dkey(n);
-    const e = n === 0 ? { k: eaten, w: water, g: goal, wk: todayHist.wk, b: todayHist.b } : (hist[k] || {});
-    return { k, n, e };
-  }), [eaten, water, goal, todayHist, hist]);
-
-  const HistChart = ({ data, refs, colorFn }) => (
+function HistChart({ days, data, refs, colorFn }) {
+  return (
     <div className="hist">
       {days.map((d, i) => (
         <div key={d.k}>
@@ -37,8 +16,10 @@ export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, 
       ))}
     </div>
   );
+}
 
-  const Tile = ({ n, label, val, sub, pct, col }) => (
+function Tile({ n, label, val, sub, pct, col, switchTab }) {
+  return (
     <button className="tile" onClick={() => switchTab(n)}>
       <div className="mu">{label}</div>
       <div className="v" style={col ? { color: col } : {}}>{val}</div>
@@ -46,6 +27,19 @@ export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, 
       <div className="mu" style={{ fontSize: 12 }}>{sub}</div>
     </button>
   );
+}
+
+export default function HomeTab({ meals, goal, water, wg, plan, bmi, days, dateLabel, targets, curRoutine, sumMeals, switchTab, onWaterAdd }) {
+  const eaten = sumMeals("kcal");
+  const left = goal - eaten;
+  const todayHist = days[days.length - 1]?.e || {};
+
+  // BMI
+  const bmiValue = bmi?.bmi || 0;
+  const bmiCat = bmi?.category || [];
+
+  const sess = todayHist.wk || 0;
+  const circ = 326.7;
 
   const logged = days.filter(d => (+d.e.k || 0) > 0);
   const avg = logged.length ? Math.round(logged.reduce((a, d) => a + d.e.k, 0) / logged.length) : 0;
@@ -57,7 +51,7 @@ export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, 
   return (
     <section className="home-section">
       <div className="card">
-        <div className="mu">{new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}</div>
+        <div className="mu">{dateLabel}</div>
         <div style={{ fontSize: 20, fontWeight: 800, marginTop: 2 }}>Your day at a glance</div>
         <div className="ringwrap">
           <svg viewBox="0 0 120 120" className="ring" aria-hidden="true">
@@ -80,18 +74,18 @@ export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, 
           </div>
         </div>
         <div className="g4">
-          <Tile n={1} label="Calories" val={Math.abs(left).toLocaleString()}
+          <Tile switchTab={switchTab} n={1} label="Calories" val={Math.abs(left).toLocaleString()}
             sub={left >= 0 ? `kcal left · ${eaten} of ${goal}` : `kcal over · goal ${goal}`}
             pct={eaten / goal * 100} col={left < 0 ? "#d2473c" : ""} />
-          <Tile n={1} label="Water" val={(water / 1000).toFixed(2) + " L"}
+          <Tile switchTab={switchTab} n={1} label="Water" val={(water / 1000).toFixed(2) + " L"}
             sub={`of ${(wg / 1000).toFixed(1)} L goal`}
             pct={water / wg * 100} col="#3b9ae1" />
-          <Tile n={5} label="Workout" val={sess ? "✓ Done" : "Not yet"}
+          <Tile switchTab={switchTab} n={5} label="Workout" val={sess ? "✓ Done" : "Not yet"}
             sub={sess ? `${sess} session${sess > 1 ? "s" : ""} · ~${todayHist.b || 0} kcal` : curRoutine.items.length ? `${curRoutine.items.length} exercises ready` : "Build a routine"}
             pct={sess ? 100 : 0} col={sess ? "" : "var(--mu)"} />
-          <Tile n={4} label="BMI" val={bmi ? bmi.toFixed(1) : "--"}
-            sub={bmi ? bmiCat[0] : "Add height & weight"}
-            pct={bmi ? (bmi - 15) / 25 * 100 : 0} col={bmi ? bmiCat[1] : "var(--mu)"} />
+          <Tile switchTab={switchTab} n={4} label="BMI" val={bmiValue ? bmiValue.toFixed(1) : "--"}
+            sub={bmiValue ? bmiCat[0] : "Add height & weight"}
+            pct={bmiValue ? (bmiValue - 15) / 25 * 100 : 0} col={bmiValue ? bmiCat[1] : "var(--mu)"} />
         </div>
       </div>
 
@@ -117,6 +111,7 @@ export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, 
       <div className="card">
         <div className="mu">Last 7 days · calories</div>
         <HistChart
+          days={days}
           data={days.map(d => +d.e.k || 0)}
           refs={days.map(d => +d.e.g || goal)}
           colorFn={(v, r) => v > r * 1.05 ? "#d2473c" : "var(--ac)"}
@@ -126,6 +121,7 @@ export default function HomeTab({ meals, goal, water, wg, plan, tdee, weightKg, 
         </div>
         <div className="mu" style={{ marginTop: 14 }}>Last 7 days · water</div>
         <HistChart
+          days={days}
           data={days.map(d => +d.e.w || 0)}
           refs={days.map(() => wg)}
           colorFn={() => "#3b9ae1"}

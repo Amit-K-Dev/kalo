@@ -64,6 +64,14 @@ CREATE TABLE IF NOT EXISTS current_routine (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 6. AI request counters (written only through a privileged atomic function)
+CREATE TABLE IF NOT EXISTS public.ai_usage (
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  day DATE NOT NULL DEFAULT CURRENT_DATE,
+  requests INT NOT NULL DEFAULT 0 CHECK (requests >= 0),
+  PRIMARY KEY (user_id, day)
+);
+
 -- ============================================================
 -- Row Level Security (RLS)
 -- ============================================================
@@ -73,23 +81,32 @@ ALTER TABLE daily_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE meals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE routines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE current_routine ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ai_usage ENABLE ROW LEVEL SECURITY;
 
+-- Clients cannot read or modify the counters directly.
+REVOKE ALL ON TABLE public.ai_usage FROM PUBLIC, anon, authenticated;
+
+DROP POLICY IF EXISTS "Users manage own profile" ON profiles;
 CREATE POLICY "Users manage own profile" ON profiles
   FOR ALL USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users manage own logs" ON daily_logs;
 CREATE POLICY "Users manage own logs" ON daily_logs
   FOR ALL USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users manage own meals" ON meals;
 CREATE POLICY "Users manage own meals" ON meals
   FOR ALL USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users manage own routines" ON routines;
 CREATE POLICY "Users manage own routines" ON routines
   FOR ALL USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users manage own current_routine" ON current_routine;
 CREATE POLICY "Users manage own current_routine" ON current_routine
   FOR ALL USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
@@ -105,12 +122,43 @@ BEGIN
   VALUES (NEW.id);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
+
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Atomically reserve one AI call so parallel workers cannot exceed a user's
+-- daily allowance. The function owner can update ai_usage despite its RLS.
+CREATE OR REPLACE FUNCTION public.reserve_ai_estimate(max_per_day INT DEFAULT 30)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  reserved_count INT;
+BEGIN
+  IF auth.uid() IS NULL OR max_per_day < 1 THEN
+    RETURN FALSE;
+  END IF;
+
+  INSERT INTO public.ai_usage (user_id, day, requests)
+  VALUES (auth.uid(), CURRENT_DATE, 1)
+  ON CONFLICT (user_id, day) DO UPDATE
+    SET requests = public.ai_usage.requests + 1
+    WHERE public.ai_usage.requests < max_per_day
+  RETURNING requests INTO reserved_count;
+
+  RETURN reserved_count IS NOT NULL;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.reserve_ai_estimate(INT) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.reserve_ai_estimate(INT) TO authenticated;
 
 -- ============================================================
 -- Indexes for performance

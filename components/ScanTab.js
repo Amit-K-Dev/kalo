@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
+import { estimateMeal } from "@/lib/backend";
 
 function toB64(file) {
   return new Promise((res, rej) => {
@@ -51,16 +52,7 @@ export default function ScanTab({ onAddMeals }) {
     try {
       const b64 = await toB64(photo);
       const h = hint.trim();
-      const r = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `You are a nutrition estimator. Identify every distinct food and drink in the photo. For each, estimate the WEIGHT in grams of the portion shown (for drinks use ml as grams), using visual cues such as plate or bowl size, utensils, hands, packaging and typical serving sizes. Then give nutrition per 100 g of that food as prepared. If there is no food, return {"items":[]}.${h ? `\nThe person adds: """${h}"""` : ""}\nRespond with ONLY JSON: {"items":[{"name":"food name","grams":number,"kcal100":number,"p100":number,"c100":number,"f100":number}]}`,
-          image: { data: b64 }
-        })
-      });
-      if (!r.ok) throw { code: r.status === 429 ? "rate_limited" : r.status === 413 ? "image_rejected" : "error" };
-      const data = await r.json();
+      const data = await estimateMeal({ mode: "scan", text: h, image: b64 });
       const items = ((data && data.items) || []).filter(i => i && i.name && +i.grams > 0);
       if (!items.length) {
         setError("I couldn't spot any food. Try a closer, brighter shot.");
@@ -74,8 +66,8 @@ export default function ScanTab({ onAddMeals }) {
       })));
       setShowResults(true);
     } catch (e) {
-      const msg = e?.code === "rate_limited" ? "Too many requests. Try again in a bit."
-        : e?.code === "image_rejected" ? "That image couldn't be read. Try another photo."
+      const msg = e?.status === 429 ? "Too many requests. Try again in a bit."
+        : e?.status === 413 ? "That image couldn't be read. Try another photo."
         : "Couldn't analyze that photo. Try again.";
       setError(msg);
     }
@@ -101,9 +93,13 @@ export default function ScanTab({ onAddMeals }) {
       const c = calc(i);
       return { name: `${i.name} (${i.g} g)`, kcal: c.kcal, p: c.p, c: c.c, f: c.f };
     });
-    onAddMeals(items);
-    setHint("");
-    handleFile(null);
+    setLoading(true);
+    Promise.resolve(onAddMeals(items)).then(() => {
+      setHint("");
+      handleFile(null);
+    }).catch(() => {
+      setError("Couldn't save these meals. Please try again.");
+    }).finally(() => setLoading(false));
   };
 
   const t = totals();
@@ -174,7 +170,9 @@ export default function ScanTab({ onAddMeals }) {
               </div>
             );
           })}
-          <button className="btn" onClick={handleAddAll}>Add to today&apos;s log</button>
+          <button className="btn" onClick={handleAddAll} disabled={loading}>
+            {loading ? "Saving…" : "Add to today’s log"}
+          </button>
         </div>
       )}
     </section>

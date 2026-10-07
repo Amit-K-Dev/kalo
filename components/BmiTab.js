@@ -1,17 +1,32 @@
 "use client";
 import { useState, useEffect } from "react";
-import { calcBMI } from "@/lib/nutrition";
+import { getBmi } from "@/lib/store";
 
 export default function BmiTab({ heightCm, weightKg, onUpdate }) {
   const [h, setH] = useState(heightCm || "");
   const [w, setW] = useState(weightKg || "");
+  const [bmiData, setBmiData] = useState(null);
 
   useEffect(() => {
-    if (heightCm) setH(heightCm);
-    if (weightKg) setW(weightKg);
-  }, [heightCm, weightKg]);
+    let current = true;
+    if (!(+h > 0 && +w > 0)) {
+      return () => { current = false; };
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const result = await getBmi(+h, +w);
+        if (current) setBmiData(result);
+      } catch {
+        if (current) setBmiData(null);
+      }
+    }, 180);
+    return () => {
+      current = false;
+      clearTimeout(timer);
+    };
+  }, [h, w]);
 
-  const bmiData = calcBMI(+h, +w);
+  const visibleBmi = +h > 0 && +w > 0 ? bmiData : null;
 
   const handleChange = (newH, newW) => {
     setH(newH);
@@ -39,9 +54,9 @@ export default function BmiTab({ heightCm, weightKg, onUpdate }) {
         </div>
 
         <div style={{ marginTop: 14 }}>
-          <span className="big">{bmiData ? bmiData.bmi.toFixed(1) : "--"}</span>{" "}
-          <span style={{ fontWeight: 700, fontSize: 18, color: bmiData ? bmiData.category[1] : "var(--mu)" }}>
-            {bmiData ? bmiData.category[0] : ""}
+          <span className="big">{visibleBmi ? visibleBmi.bmi.toFixed(1) : "--"}</span>{" "}
+          <span style={{ fontWeight: 700, fontSize: 18, color: visibleBmi ? visibleBmi.category[1] : "var(--mu)" }}>
+            {visibleBmi ? visibleBmi.category[0] : ""}
           </span>
         </div>
 
@@ -50,16 +65,16 @@ export default function BmiTab({ heightCm, weightKg, onUpdate }) {
           <i style={{ width: "26%", background: "#3fb27f" }} />
           <i style={{ width: "20%", background: "#f0a63a" }} />
           <i style={{ width: "40%", background: "#d2473c" }} />
-          <u style={{ left: bmiData ? Math.max(0, Math.min(100, (bmiData.bmi - 15) / 25 * 100)) + "%" : "0%" }} />
+          <u style={{ left: visibleBmi ? Math.max(0, Math.min(100, (visibleBmi.bmi - 15) / 25 * 100)) + "%" : "0%" }} />
         </div>
 
-        {bmiData && (
+        {visibleBmi && (
           <div className="mu">
-            Healthy weight for {h} cm: {bmiData.lo.toFixed(1)}–{bmiData.hi.toFixed(1)} kg.{" "}
-            {+w > bmiData.hi
-              ? `That's about ${(+w - bmiData.hi).toFixed(1)} kg above the range.`
-              : +w < bmiData.lo
-              ? `That's about ${(bmiData.lo - +w).toFixed(1)} kg below the range.`
+            Healthy weight for {h} cm: {visibleBmi.lo.toFixed(1)}–{visibleBmi.hi.toFixed(1)} kg.{" "}
+            {+w > visibleBmi.hi
+              ? `That's about ${(+w - visibleBmi.hi).toFixed(1)} kg above the range.`
+              : +w < visibleBmi.lo
+              ? `That's about ${(visibleBmi.lo - +w).toFixed(1)} kg below the range.`
               : "You're inside the range."}
           </div>
         )}

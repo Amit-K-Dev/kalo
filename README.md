@@ -1,140 +1,121 @@
-# 🥗 Kalo — Smart Nutrition & Fitness Tracker
+# Kalo — Nutrition & Fitness Tracker
 
-**Eat smart · Drink more · Move better**
+Kalo tracks meals, water, workouts, body composition, and nutrition goals.
 
-Kalo is a modern, AI-powered health companion that tracks your calories, water intake, workouts, and body composition — all in one beautiful dashboard.
+## Architecture
 
----
+- **Frontend:** Next.js 16 App Router, React 19, custom CSS.
+- **Backend:** Python 3 + FastAPI for the JSON API, nutrition/workout logic, Supabase data access, and AI calls.
+- **Auth and database:** Supabase Auth + PostgreSQL + Row Level Security (RLS).
+- **AI:** OpenRouter, called only by the Python backend.
+- **Deployment:** Next.js on Vercel and FastAPI on a Python-capable host.
 
-## ✨ Features
+The browser uses Supabase Auth to sign in and sends its access token to FastAPI
+as a bearer token. FastAPI verifies the token and uses it for RLS-protected
+database requests. The OpenRouter key stays on the Python server.
 
-| Feature | Description |
-|---|---|
-| 🍽 **AI Meal Estimation** | Describe what you ate in plain text and get instant calorie + macro breakdowns powered by AI |
-| 📸 **Photo Scanning** | Snap a photo of your meal and let AI identify & estimate nutrition |
-| 💧 **Water Tracker** | Track daily water intake with a visual tube gauge and smart goals based on body weight |
-| 🎯 **Goal Planner** | Calculate your TDEE and pick a plan — Cut, Lean Bulk, Maintain, or High Protein |
-| ⚖️ **BMI Calculator** | Real-time BMI with visual category indicator |
-| 🏋️ **Workout Builder** | Build custom routines from 60+ exercises, track sets/reps, and log calories burned |
-| 📊 **Weekly History** | At-a-glance 7-day chart showing calories, water, and workout trends |
-| 🔐 **Google Auth** | One-click Google sign-in with Supabase authentication |
-| 👤 **Profile Sync** | Avatar, name, and all data synced across devices via Supabase |
+## Requirements
 
----
+- Node.js 20.9 or later
+- Python 3.11 or later
+- A Supabase project
+- An OpenRouter API key for AI meal estimation and photo scanning (optional; the rest of the app works without it)
 
-## 🛠 Tech Stack
+## Configuration
 
-- **Framework:** [Next.js 16](https://nextjs.org) (App Router)
-- **Frontend:** React 19, Vanilla CSS (custom design system)
-- **Backend:** Supabase (Auth + PostgreSQL + RLS)
-- **AI:** OpenRouter API (nutrition estimation from text & images)
-- **Deployment:** Vercel
+Copy `.env.example` to `.env.local` and fill in your values. In PowerShell:
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- A [Supabase](https://supabase.com) project
-- An [OpenRouter](https://openrouter.ai) API key
-
-### 1. Clone & Install
-
-```bash
-git clone https://github.com/Amit-K-Dev/kalo.git
-cd kalo
-npm install
+```powershell
+Copy-Item .env.example .env.local
 ```
 
-### 2. Environment Variables
-
-Create a `.env.local` file in the project root:
+Next.js reads `NEXT_PUBLIC_*` values; the Python backend reads `.env.local`
+for local development. In production, configure each service's environment
+separately. `NEXT_PUBLIC_KALO_API_URL` is the Python API's base URL.
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_KALO_API_URL=http://localhost:8000
+SITE_URL=http://localhost:3000
 
-OPENROUTER_API_KEY=sk-or-v1-your-key-here
+OPENROUTER_API_KEY=your-openrouter-key
 OPENROUTER_MODEL=dots-studio/dots-3-note-preview:free
+FRONTEND_ORIGINS=http://localhost:3000
 ```
 
-### 3. Database Setup
+`FRONTEND_ORIGINS` is a comma-separated allowlist of exact frontend origins.
+Set it on the Python service to the deployed Next.js origin(s), for example
+`https://kalo.example.com`—without a path. Set
+`NEXT_PUBLIC_KALO_API_URL` on the frontend to the deployed Python API base
+URL. Keep the OpenRouter key only in the Python service's environment.
 
-Run the SQL migration in your Supabase SQL Editor:
+## Database setup
+
+Run `supabase-migration.sql` in the Supabase SQL Editor. It creates the
+profiles, daily logs, meals, routines, current routine, and private AI usage
+tables; enables RLS; installs the new-user profile trigger; and adds the
+atomic function used to enforce the daily AI request limit. The AI counter
+cannot be read or changed directly by client roles.
+
+## Run locally
+
+Start the Python API in one terminal:
 
 ```bash
-# Copy contents of supabase-migration.sql into Supabase → SQL Editor → Run
+python -m venv .venv
+# Windows: .venv\Scripts\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
 ```
 
-This creates the following tables with Row Level Security:
-- `profiles` — user settings (goal, TDEE, plan, weight, height)
-- `daily_logs` — daily water & workout tracking
-- `meals` — individual meal entries with macros
-- `routines` — saved workout routines
-- `current_routine` — active workout session
-
-### 4. Run
+Then start Next.js in another terminal:
 
 ```bash
+npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000). FastAPI's interactive
+API documentation is at [http://localhost:8000/docs](http://localhost:8000/docs).
 
----
+## Project structure
 
-## 📁 Project Structure
-
-```
-kalo/
-├── app/
-│   ├── api/
-│   │   ├── ai/route.js          # AI nutrition estimation endpoint
-│   │   └── auth/callback/route.js # OAuth callback handler
-│   ├── dashboard/page.js        # Main app dashboard
-│   ├── login/page.js            # Login page
-│   ├── signup/page.js           # Signup page
-│   ├── globals.css              # Full design system
-│   ├── layout.js                # Root layout + metadata
-│   └── page.js                  # Landing redirect
-├── components/
-│   ├── HomeTab.js               # Dashboard overview + weekly chart
-│   ├── MealsTab.js              # Meal logging + AI estimation
-│   ├── ScanTab.js               # Photo-based meal scanning
-│   ├── GoalTab.js               # TDEE calculator + plan selector
-│   ├── BmiTab.js                # BMI calculator
-│   ├── WorkoutTab.js            # Workout routine builder
-│   ├── UserMenu.js              # Profile avatar + settings modal
-│   └── Confetti.js              # Celebration animations
-├── lib/
-│   ├── supabase-client.js       # Supabase browser client
-│   ├── supabase-server.js       # Supabase server client
-│   ├── store.js                 # All Supabase CRUD operations
-│   ├── nutrition.js             # TDEE, macros, water calculations
-│   └── exercises.js             # Exercise database (60+ exercises)
-├── supabase-migration.sql       # Database schema + RLS policies
-└── .env.local                   # Environment variables (not committed)
+```text
+app/                 Next.js pages and auth UI
+components/          React dashboard tabs
+lib/backend.js       Authenticated requests to FastAPI
+lib/store.js         Frontend data API client
+kalo/                FastAPI routes, Supabase access, AI and domain logic
+main.py              Python API entrypoint
+supabase-migration.sql
 ```
 
----
+## Checks
 
-## 🔒 Security
+Install the Python test dependencies and run the backend suite:
 
-- All database tables use **Row Level Security (RLS)** — users can only access their own data
-- API keys are server-side only (never exposed to the browser)
-- Google OAuth handled securely through Supabase Auth
-- Meal photos are processed by AI and **not stored** by Kalo
+```bash
+pip install -r requirements-dev.txt
+python -m pytest -q
+```
 
----
+Check the frontend with:
 
-## 📄 License
+```bash
+npm run lint
+npm run build
+```
 
-This project is for personal/educational use.
+## Security notes
 
----
+- Supabase RLS scopes database access to the signed-in user.
+- FastAPI verifies the Supabase access token before serving `/api/*` routes.
+- AI requests are capped at 30 per user per database day.
+- Keep `OPENROUTER_API_KEY` on the backend; never prefix it with `NEXT_PUBLIC_`.
+- Meal text and photos are sent to OpenRouter for estimates and are not stored by Kalo.
 
-<p align="center">
-  Built with 💚 by <strong>Amit Kumar</strong>
-</p>
+## License
+
+Personal and educational use.

@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
-import { PLANS, planCalc } from "@/lib/nutrition";
-
-export default function GoalTab({ profile, plan, tdee, weightKg, onCalculate, onPlanSelect }) {
+export default function GoalTab({ profile, plan, plans, tdee, onCalculate, onPlanSelect, planOptions }) {
   const [sex, setSex] = useState(profile?.sex || "m");
   const [age, setAge] = useState(profile?.age || 30);
   const [ht, setHt] = useState(profile?.height_cm || 172);
@@ -60,8 +58,9 @@ export default function GoalTab({ profile, plan, tdee, weightKg, onCalculate, on
           <div className="mu">Maintenance (TDEE)</div>
           <div className="big">{tdee} kcal</div>
           <div className="mu" style={{ margin: "12px 0 8px" }}>Choose your plan. Tap one to set it as your daily goal.</div>
-          {PLANS.map(p => {
-            const c = planCalc(p, tdee, weightKg);
+          {plans.map(p => {
+            const c = planOptions[p.id];
+            if (!c) return null;
             return (
               <button key={p.id} className={"plan" + (plan === p.id ? " on" : "")}
                 onClick={() => onPlanSelect(p.id)}>

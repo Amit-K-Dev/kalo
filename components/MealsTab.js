@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { PLANS, planCalc, waterGoal } from "@/lib/nutrition";
+import { estimateMeal } from "@/lib/backend";
 
-export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg, targets, sumMeals, onAddMeal, onDeleteMeal, onWaterChange, onPlanSelect, switchTab, profile }) {
+export default function MealsTab({ meals, goal, plan, plans, water, wg, targets, sumMeals, onAddMeals, onDeleteMeal, onWaterChange, onPlanSelect, switchTab }) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const pending = profile?.plan;
-
   const eaten = sumMeals("kcal");
   const left = goal - eaten;
 
@@ -16,27 +14,20 @@ export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg,
     setError("");
     setLoading(true);
     try {
-      const r = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `You are a nutrition estimator. Break this meal description into individual food items with realistic portion-based estimates.\nMeal: """${query}"""\nRespond with ONLY JSON: {"items":[{"name":"item with portion","kcal":number,"p":grams protein,"c":grams carbs,"f":grams fat}]}`
-        })
-      });
-      if (!r.ok) {
-        const errBody = await r.json().catch(() => ({}));
-        throw { code: r.status === 429 ? "rate_limited" : "error", message: errBody.error || `HTTP ${r.status}` };
-      }
-      const data = await r.json();
+      const data = await estimateMeal({ mode: "text", text: query });
       const items = (data && data.items) || [];
       if (!items.length) throw 0;
-      for (const it of items) {
-        await onAddMeal({ name: String(it.name), kcal: Math.round(+it.kcal || 0), p: Math.round(+it.p || 0), c: Math.round(+it.c || 0), f: Math.round(+it.f || 0) });
-      }
+      await onAddMeals(items.map((it) => ({
+        name: String(it.name),
+        kcal: Math.round(+it.kcal || 0),
+        p: Math.round(+it.p || 0),
+        c: Math.round(+it.c || 0),
+        f: Math.round(+it.f || 0),
+      })));
       setQuery("");
     } catch (e) {
       console.error(e);
-      if (e?.code === "rate_limited") {
+      if (e?.status === 429) {
         setError("Too many requests. Try again in a bit.");
       } else if (e?.message) {
         setError(`Error: ${e.message}`);
@@ -52,7 +43,7 @@ export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg,
       <div className="card">
         <div className="mu">Choose your goal</div>
         <div className="chips">
-          {PLANS.map(p => (
+          {plans.map(p => (
             <button key={p.id} className={"chip" + (plan === p.id ? " on" : "")}
               onClick={() => onPlanSelect(p.id)}>
               {p.n}

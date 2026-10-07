@@ -21,17 +21,16 @@ export default function SignupPage() {
     }
     setLoading(true);
     const supabase = getSupabaseBrowser();
-    const { error: err } = await supabase.auth.signUp({ email, password });
+    const { data, error: err } = await supabase.auth.signUp({ email, password });
     if (err) {
       setError(err.message);
       setLoading(false);
     } else {
-      setDone(true);
-      // Auto sign in after signup
-      const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
-      if (!signInErr) {
+      if (data.session) {
         router.push("/dashboard");
         router.refresh();
+      } else {
+        setDone(true);
       }
     }
   };
@@ -63,7 +62,7 @@ export default function SignupPage() {
         {done ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
-            <p>Account created! Redirecting…</p>
+            <p>Account created. Check your inbox to confirm your email, then sign in.</p>
           </div>
         ) : (
           <>
