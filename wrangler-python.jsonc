@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "kalo-python-api",
+  "main": "worker.py",
+  "compatibility_date": "2026-10-07",
+  "compatibility_flags": ["python_workers"],
+  "vars": {
+    "SITE_URL": "https://kalo.shedbody.com",
+    "FRONTEND_ORIGINS": "https://kalo.shedbody.com"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

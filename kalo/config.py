@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Mapping
 
 from dotenv import load_dotenv
 
@@ -18,9 +19,10 @@ load_dotenv(ROOT / ".env.local")
 load_dotenv(ROOT / ".env", override=True)
 
 
-def _first(*names: str, default: str = "") -> str:
+def _first(*names: str, default: str = "", environ: Mapping[str, str] | None = None) -> str:
+    source = os.environ if environ is None else environ
     for name in names:
-        val = os.environ.get(name, "").strip()
+        val = str(source.get(name, "") or "").strip()
         if val:
             return val
     return default
@@ -41,21 +43,22 @@ class Settings:
         return bool(self.supabase_url and self.supabase_anon_key)
 
 
-def load_settings() -> Settings:
+def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
+    """Build settings from a service environment or the local process."""
     return Settings(
         # Both spellings accepted: the NEXT_PUBLIC_* names come straight
         # from the original .env.local so it works unmodified.
-        supabase_url=_first("SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL").rstrip("/"),
-        supabase_anon_key=_first("SUPABASE_ANON_KEY", "NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-        openrouter_api_key=_first("OPENROUTER_API_KEY"),
-        openrouter_model=_first("OPENROUTER_MODEL", default="dots-studio/dots-3-note-preview:free"),
-        site_url=_first("SITE_URL", "NEXT_PUBLIC_SITE_URL", default="http://localhost:8000").rstrip("/"),
+        supabase_url=_first("SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL", environ=environ).rstrip("/"),
+        supabase_anon_key=_first("SUPABASE_ANON_KEY", "NEXT_PUBLIC_SUPABASE_ANON_KEY", environ=environ),
+        openrouter_api_key=_first("OPENROUTER_API_KEY", environ=environ),
+        openrouter_model=_first("OPENROUTER_MODEL", default="dots-studio/dots-3-note-preview:free", environ=environ),
+        site_url=_first("SITE_URL", "NEXT_PUBLIC_SITE_URL", default="http://localhost:8000", environ=environ).rstrip("/"),
         frontend_origins=tuple(
             origin.strip().rstrip("/")
-            for origin in _first("FRONTEND_ORIGINS", default="http://localhost:3000").split(",")
+            for origin in _first("FRONTEND_ORIGINS", default="http://localhost:3000", environ=environ).split(",")
             if origin.strip()
         ),
-        debug=os.environ.get("DEBUG", "").lower() in {"1", "true", "yes"},
+        debug=_first("DEBUG", environ=environ).lower() in {"1", "true", "yes"},
     )
 
 

@@ -26,7 +26,7 @@ router = APIRouter(prefix="/api")
 # ─── Helpers ───
 
 def _store(request: Request, session: Session) -> Store:
-    cfg = request.app.state.settings
+    cfg = request.state.settings
     db = SupabaseDB(cfg.supabase_url, cfg.supabase_anon_key, session.access_token)
     return Store(db, session.user_id)
 
@@ -354,7 +354,7 @@ async def ai_estimate(request: Request, body: AIIn):
         return _err("Describe the meal first")
     if body.mode == "scan" and not body.image:
         return _err("An image is required")
-    if not request.app.state.settings.openrouter_api_key.strip():
+    if not request.state.settings.openrouter_api_key.strip():
         return JSONResponse({"error": "AI service is not configured"}, status_code=500)
     try:
         allowed = await _store(request, request.state.session).db.rpc(
@@ -366,7 +366,7 @@ async def ai_estimate(request: Request, body: AIIn):
         return JSONResponse({"error": "Daily AI estimate limit reached"}, status_code=429)
     prompt = _scan_prompt(body.text) if body.mode == "scan" else _text_prompt(body.text)
     try:
-        return JSONResponse(await estimate(prompt, body.image))
+        return JSONResponse(await estimate(prompt, body.image, config=request.state.settings))
     except AIError as exc:
         if exc.status == 429:
             return JSONResponse({"error": "Too many requests. Try again in a bit."}, status_code=429)
@@ -377,3 +377,4 @@ async def ai_estimate(request: Request, body: AIIn):
         if exc.status == 500:
             return JSONResponse({"error": exc.message}, status_code=500)
         return JSONResponse({"error": exc.message}, status_code=502)
+

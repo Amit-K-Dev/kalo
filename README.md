@@ -8,7 +8,7 @@ Kalo tracks meals, water, workouts, body composition, and nutrition goals.
 - **Backend:** Python 3 + FastAPI for the JSON API, nutrition/workout logic, Supabase data access, and AI calls.
 - **Auth and database:** Supabase Auth + PostgreSQL + Row Level Security (RLS).
 - **AI:** OpenRouter, called only by the Python backend.
-- **Deployment:** Next.js on Vercel and FastAPI on a Python-capable host.
+- **Deployment:** Next.js on Cloudflare Workers and FastAPI on a separate Cloudflare Python Worker.
 
 The browser uses Supabase Auth to sign in and sends its access token to FastAPI
 as a bearer token. FastAPI verifies the token and uses it for RLS-protected
@@ -17,7 +17,8 @@ database requests. The OpenRouter key stays on the Python server.
 ## Requirements
 
 - Node.js 20.9 or later
-- Python 3.11 or later
+- Python 3.13 or later and [uv](https://docs.astral.sh/uv/)
+- Node.js for Wrangler and Cloudflare's local Worker runtime
 - A Supabase project
 - An OpenRouter API key for AI meal estimation and photo scanning (optional; the rest of the app works without it)
 
@@ -45,10 +46,36 @@ FRONTEND_ORIGINS=http://localhost:3000
 ```
 
 `FRONTEND_ORIGINS` is a comma-separated allowlist of exact frontend origins.
-Set it on the Python service to the deployed Next.js origin(s), for example
-`https://kalo.example.com`—without a path. Set
-`NEXT_PUBLIC_KALO_API_URL` on the frontend to the deployed Python API base
-URL. Keep the OpenRouter key only in the Python service's environment.
+For production, it is set to `https://kalo.shedbody.com` in
+`wrangler-python.jsonc`. Keep the OpenRouter key only in the Python service's
+environment.
+
+## Deploy the Python API to Cloudflare
+
+The FastAPI backend runs as its own Python Worker; it does not replace the
+Next.js frontend Worker. From the repository root, run:
+
+```bash
+uv sync
+uv run pywrangler dev --config wrangler-python.jsonc
+uv run pywrangler deploy --config wrangler-python.jsonc
+```
+
+In the Cloudflare dashboard, open the `kalo-python-api` Worker and add these
+runtime secrets under **Settings → Variables and Secrets**:
+
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `OPENROUTER_API_KEY` (optional; AI meal estimates stay disabled without it)
+
+After deployment, copy the Worker's `workers.dev` URL. In the existing Next.js
+Worker, set `NEXT_PUBLIC_KALO_API_URL` to that URL under **Settings → Build →
+Build variables and secrets**, then trigger a new frontend build. This value
+must be present during the Next.js build because it is embedded in browser code.
+
+The Worker also provides `https://<worker-url>/health` for a basic availability
+check. Cloudflare's free Workers plan currently allows up to 100,000 requests
+per day; request and CPU limits apply.
 
 ## Database setup
 
@@ -119,3 +146,4 @@ npm run build
 ## License
 
 Personal and educational use.
+

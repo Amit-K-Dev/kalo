@@ -18,7 +18,7 @@ from typing import Any
 
 import httpx
 
-from .config import settings
+from .config import Settings, settings
 
 __all__ = ["AIError", "estimate"]
 
@@ -64,13 +64,19 @@ def _extract_json(text: str) -> dict[str, Any]:
     raise AIError("Could not parse AI reply", status=502)
 
 
-async def estimate(prompt: str, image_b64: str | None = None) -> dict[str, Any]:
+async def estimate(
+    prompt: str,
+    image_b64: str | None = None,
+    *,
+    config: Settings | None = None,
+) -> dict[str, Any]:
     """Ask OpenRouter for a JSON nutrition breakdown.
 
     Raises :class:`AIError` with an HTTP status suitable for returning
     straight to the client (400 / 413 / 429 / 502).
     """
-    api_key = settings.openrouter_api_key.strip()
+    config = config or settings
+    api_key = config.openrouter_api_key.strip()
     if not api_key:
         raise AIError("Server not configured", status=500)
 
@@ -101,14 +107,14 @@ async def estimate(prompt: str, image_b64: str | None = None) -> dict[str, Any]:
     )
 
     body = {
-        "model": settings.openrouter_model,
+        "model": config.openrouter_model,
         "max_tokens": MAX_TOKENS,
         "messages": [{"role": "user", "content": content}],
     }
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": settings.site_url,
+        "HTTP-Referer": config.site_url,
         "X-Title": "Kalo",
     }
 
@@ -157,3 +163,4 @@ async def estimate(prompt: str, image_b64: str | None = None) -> dict[str, Any]:
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 100_000:
                 raise AIError("Meal estimate service returned invalid nutrition data", status=502)
     return result
+
