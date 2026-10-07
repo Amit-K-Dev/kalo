@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase-client";
 import { useRouter } from "next/navigation";
 import { today, waterGoal, PLANS, planCalc, dkey } from "@/lib/nutrition";
-import { getMeals, addMeal, deleteMeal, getDailyLog, upsertDailyLog, getProfile, updateProfile, getHistory, getSavedRoutines, saveRoutine, deleteRoutine, getCurrentRoutine, saveCurrentRoutine } from "@/lib/store";
+import { getMeals, addMeals, deleteMeal, getDailyLog, upsertDailyLog, getProfile, updateProfile, getHistory, getSavedRoutines, saveRoutine, deleteRoutine, getCurrentRoutine, saveCurrentRoutine } from "@/lib/store";
 import HomeTab from "@/components/HomeTab";
 import MealsTab from "@/components/MealsTab";
 import ScanTab from "@/components/ScanTab";
@@ -96,8 +96,8 @@ export default function DashboardPage() {
   };
 
   // Handlers
-  const handleAddMeal = async (mealData) => runAction(async () => {
-    await addMeal(mealData);
+  const handleAddMeals = async (mealData) => runAction(async () => {
+    await addMeals(mealData);
     const [m, h] = await Promise.all([getMeals(today()), getHistory(7)]);
     setMeals(m);
     setHist(h);
@@ -218,6 +218,7 @@ export default function DashboardPage() {
 
         {tab === 1 && (
           <MealsTab
+            onAddMeals={handleAddMeals}
             meals={meals} goal={goal} plan={curPlan} tdee={tdee}
             weightKg={weightKg} water={water} wg={wg} targets={targets}
             sumMeals={sumMeals} onAddMeal={handleAddMeal}
@@ -242,13 +243,9 @@ export default function DashboardPage() {
 
         {tab === 3 && (
           <ScanTab onAddMeals={async (items) => {
-            const saved = await runAction(async () => {
-              for (const item of items) await addMeal(item);
-              const [m, h] = await Promise.all([getMeals(today()), getHistory(7)]);
-              setMeals(m);
-              setHist(h);
-            });
+            const saved = await handleAddMeals(items);
             if (saved) switchTab(1);
+            return saved;
           }} />
         )}
 
