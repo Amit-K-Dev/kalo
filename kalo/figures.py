@@ -122,4 +122,3 @@ def get_figure_svg(exercise_id: str, pose_a: list[float], pose_b: list[float]) -
 
 def clear_figure_cache() -> None:
     _fig_cache.clear()
-
