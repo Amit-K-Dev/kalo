@@ -36,7 +36,7 @@ Kalo is a modern, AI-powered health companion that tracks your calories, water i
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - A [Supabase](https://supabase.com) project
 - An [OpenRouter](https://openrouter.ai) API key
 
@@ -59,6 +59,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 OPENROUTER_API_KEY=sk-or-v1-your-key-here
 OPENROUTER_MODEL=dots-studio/dots-3-note-preview:free
 ```
+
+Meal estimation requires a signed-in account and is limited to 20 requests per user per hour. The SQL migration creates the rate-limit function and must be run in the Supabase SQL Editor before enabling AI estimation.
 
 ### 3. Database Setup
 
