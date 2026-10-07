@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase-client";
 import { useRouter } from "next/navigation";
 import { today, waterGoal, PLANS, planCalc, dkey } from "@/lib/nutrition";
-import { getMeals, addMeal, deleteMeal, getDailyLog, upsertDailyLog, getProfile, updateProfile, getHistory, getSavedRoutines, saveRoutine, deleteRoutine, getCurrentRoutine, saveCurrentRoutine } from "@/lib/store";
+import { getMeals, addMeals, deleteMeal, getDailyLog, upsertDailyLog, getProfile, updateProfile, getHistory, getSavedRoutines, saveRoutine, deleteRoutine, getCurrentRoutine, saveCurrentRoutine } from "@/lib/store";
 import HomeTab from "@/components/HomeTab";
 import MealsTab from "@/components/MealsTab";
 import ScanTab from "@/components/ScanTab";
@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const [savedRoutines, setSavedRoutines] = useState([]);
   const [curRoutine, setCurRoutine] = useState({ name: "", items: [] });
   const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState("");
   const prevWaterHit = useRef(null);
 
   // Load user and data
@@ -81,38 +82,47 @@ export default function DashboardPage() {
     prevWaterHit.current = water >= wg;
   }, [water, wg]);
 
+  // Show save failures instead of silently treating them as successful.
+  const runAction = async (action) => {
+    setActionError("");
+    try {
+      await action();
+      return true;
+    } catch (error) {
+      console.error("Dashboard action failed:", error);
+      setActionError("Your change could not be saved. Please try again.");
+      return false;
+    }
+  };
+
   // Handlers
-  const handleAddMeal = async (mealData) => {
-    await addMeal(mealData);
-    const m = await getMeals(today());
+  const handleAddMeals = async (mealData) => runAction(async () => {
+    await addMeals(mealData);
+    const [m, h] = await Promise.all([getMeals(today()), getHistory(7)]);
     setMeals(m);
-    const h = await getHistory(7);
     setHist(h);
-  };
+  });
 
-  const handleDeleteMeal = async (id) => {
+  const handleDeleteMeal = async (id) => runAction(async () => {
     await deleteMeal(id);
-    const m = await getMeals(today());
+    const [m, h] = await Promise.all([getMeals(today()), getHistory(7)]);
     setMeals(m);
-    const h = await getHistory(7);
     setHist(h);
-  };
+  });
 
-  const handleWaterChange = async (delta) => {
+  const handleWaterChange = async (delta) => runAction(async () => {
     const nw = Math.max(0, water + delta);
-    setWater(nw);
     await upsertDailyLog(today(), { water_ml: nw });
-    const h = await getHistory(7);
-    setHist(h);
-  };
+    setWater(nw);
+    setHist(await getHistory(7));
+  });
 
-  const handleProfileUpdate = async (updates) => {
+  const handleProfileUpdate = async (updates) => runAction(async () => {
     await updateProfile(updates);
-    const p = await getProfile();
-    setProfile(p);
-  };
+    setProfile(await getProfile());
+  });
 
-  const handleWorkoutDone = async () => {
+  const handleWorkoutDone = async () => runAction(async () => {
     const dl = await getDailyLog(today()) || { water_ml: water, workout_sessions: 0, workout_kcal: 0 };
     const { estimateWorkout } = await import("@/lib/exercises");
     const est = estimateWorkout(curRoutine.items, weightKg);
@@ -121,31 +131,32 @@ export default function DashboardPage() {
       workout_sessions: (dl.workout_sessions || 0) + 1,
       workout_kcal: (dl.workout_kcal || 0) + est.kc,
     });
-    const h = await getHistory(7);
-    setHist(h);
+    setHist(await getHistory(7));
     fireConfetti();
-  };
+  });
 
-  const handleSaveRoutine = async (name, items) => {
+  const handleSaveRoutine = async (name, items) => runAction(async () => {
     await saveRoutine(name, items);
-    const sr = await getSavedRoutines();
-    setSavedRoutines(sr);
-  };
+    setSavedRoutines(await getSavedRoutines());
+  });
 
-  const handleDeleteRoutine = async (id) => {
+  const handleDeleteRoutine = async (id) => runAction(async () => {
     await deleteRoutine(id);
-    const sr = await getSavedRoutines();
-    setSavedRoutines(sr);
-  };
+    setSavedRoutines(await getSavedRoutines());
+  });
 
-  const handleCurRoutineChange = async (name, items) => {
-    setCurRoutine({ name, items });
+  const handleCurRoutineChange = async (name, items) => runAction(async () => {
     await saveCurrentRoutine(name, items);
-  };
+    setCurRoutine({ name, items });
+  });
 
   const handleLogout = async () => {
     const supabase = getSupabaseBrowser();
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      setActionError("Sign out failed. Please try again.");
+      return;
+    }
     router.push("/login");
     router.refresh();
   };
@@ -177,6 +188,7 @@ export default function DashboardPage() {
           <h1><span className="lg">🥗</span> <span className="gt">Kalo</span></h1>
           <p className="tag">Eat smart · Drink more · Move better</p>
         </header>
+        {actionError && <div className="err" role="alert">{actionError}</div>}
 
         <div className="tabs">
           {[
@@ -206,9 +218,10 @@ export default function DashboardPage() {
 
         {tab === 1 && (
           <MealsTab
+            onAddMeals={handleAddMeals}
             meals={meals} goal={goal} plan={curPlan} tdee={tdee}
             weightKg={weightKg} water={water} wg={wg} targets={targets}
-            sumMeals={sumMeals} onAddMeal={handleAddMeal}
+            sumMeals={sumMeals}
             onDeleteMeal={handleDeleteMeal}
             onWaterChange={handleWaterChange}
             onPlanSelect={(planId) => {
@@ -229,9 +242,10 @@ export default function DashboardPage() {
         )}
 
         {tab === 3 && (
-          <ScanTab onAddMeals={(items) => {
-            items.forEach(i => handleAddMeal(i));
-            switchTab(1);
+          <ScanTab onAddMeals={async (items) => {
+            const saved = await handleAddMeals(items);
+            if (saved) switchTab(1);
+            return saved;
           }} />
         )}
 

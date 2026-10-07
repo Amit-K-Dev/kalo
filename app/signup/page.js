@@ -26,13 +26,16 @@ export default function SignupPage() {
       setError(err.message);
       setLoading(false);
     } else {
-      setDone(true);
-      // Auto sign in after signup
-      const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
-      if (!signInErr) {
-        router.push("/dashboard");
-        router.refresh();
+      // Supabase may require email confirmation before creating a session.
+      const { data: { session }, error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+      if (signInErr || !session) {
+        setError("Account created. Confirm your email, then sign in.");
+        setLoading(false);
+        return;
       }
+      setDone(true);
+      router.push("/dashboard");
+      router.refresh();
     }
   };
 

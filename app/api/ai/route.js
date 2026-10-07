@@ -1,32 +1,95 @@
 import { NextResponse } from "next/server";
+import { getSupabaseServer } from "@/lib/supabase-server";
+
+const MAX_REQUEST_BYTES = 5_000_000;
+const MAX_PROMPT_LENGTH = 4_000;
+const MAX_ITEMS = 20;
+
+function normalizeItems(items) {
+  if (!Array.isArray(items) || items.length > MAX_ITEMS) return null;
+
+  const normalized = [];
+  for (const item of items) {
+    if (!item || typeof item !== "object" || typeof item.name !== "string") return null;
+    const name = item.name.trim();
+    if (!name || name.length > 120) return null;
+
+    if ("kcal" in item || "p" in item || "c" in item || "f" in item) {
+      const values = {};
+      for (const key of ["kcal", "p", "c", "f"]) {
+        const value = Number(item[key]);
+        if (!Number.isFinite(value) || value < 0 || value > (key === "kcal" ? 20_000 : 5_000)) return null;
+        values[key] = value;
+      }
+      normalized.push({ name, ...values });
+      continue;
+    }
+
+    const values = {};
+    for (const key of ["grams", "kcal100", "p100", "c100", "f100"]) {
+      const value = Number(item[key]);
+      const max = key === "grams" ? 5_000 : key === "kcal100" ? 1_000 : 100;
+      if (!Number.isFinite(value) || value < 0 || value > max) return null;
+      values[key] = value;
+    }
+    normalized.push({ name, ...values });
+  }
+  return normalized;
+}
 
 export async function POST(request) {
+  const contentLength = Number(request.headers.get("content-length"));
+  if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
+    return NextResponse.json({ error: "Request too large" }, { status: 413 });
+  }
+
+  const supabase = await getSupabaseServer();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return NextResponse.json({ error: "Sign in to use meal estimation" }, { status: 401 });
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Bad JSON" }, { status: 400 });
+  }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+  if (!prompt) return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
+  if (prompt.length > MAX_PROMPT_LENGTH) {
+    return NextResponse.json({ error: "Prompt too long" }, { status: 413 });
+  }
+
+  const imageData = body.image?.data;
+  if (imageData !== undefined && typeof imageData !== "string") {
+    return NextResponse.json({ error: "Invalid image" }, { status: 400 });
+  }
+  if (imageData && imageData.length > 4_500_000) {
+    return NextResponse.json({ error: "Image too large" }, { status: 413 });
+  }
+
   if (!process.env.OPENROUTER_API_KEY) {
     console.error("OPENROUTER_API_KEY is not set");
     return NextResponse.json({ error: "Server not configured" }, { status: 500 });
   }
 
-  let b;
-  try {
-    b = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Bad JSON" }, { status: 400 });
+  const { data: allowed, error: rateLimitError } = await supabase.rpc("consume_ai_request");
+  if (rateLimitError) {
+    console.error("AI rate limit is unavailable:", rateLimitError.message);
+    return NextResponse.json({ error: "Meal estimation is temporarily unavailable" }, { status: 503 });
   }
+  if (!allowed) return NextResponse.json({ error: "Hourly AI request limit reached" }, { status: 429 });
 
-  const prompt = String(b.prompt || "").slice(0, 4000);
-  if (!prompt) return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
-
-  // Build messages in OpenAI-compatible format
   const content = [];
-  if (b.image && b.image.data) {
-    if (b.image.data.length > 4_500_000) {
-      return NextResponse.json({ error: "Image too large" }, { status: 413 });
-    }
+  if (imageData) {
     content.push({
       type: "image_url",
-      image_url: {
-        url: `data:image/jpeg;base64,${b.image.data}`,
-      },
+      image_url: { url: `data:image/jpeg;base64,${imageData}` },
     });
   }
   content.push({
@@ -35,11 +98,11 @@ export async function POST(request) {
   });
 
   const model = process.env.OPENROUTER_MODEL || "dots-studio/dots-3-note-preview:free";
-  const apiKey = (process.env.OPENROUTER_API_KEY || "").trim();
+  const apiKey = process.env.OPENROUTER_API_KEY.trim();
 
-  let res;
+  let response;
   try {
-    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,38 +112,41 @@ export async function POST(request) {
       },
       body: JSON.stringify({
         model,
-        max_tokens: 1000,
+        max_tokens: 1_000,
         messages: [{ role: "user", content }],
       }),
+      signal: AbortSignal.timeout(20_000),
     });
-  } catch (e) {
-    console.error("OpenRouter unreachable:", e.message);
-    return NextResponse.json({ error: `Upstream unreachable: ${e.message}` }, { status: 502 });
+  } catch (error) {
+    console.error("OpenRouter request failed:", error.message);
+    return NextResponse.json({ error: "Meal estimation service could not be reached" }, { status: 502 });
   }
 
-  if (res.status === 429) {
-    return NextResponse.json({ error: "Rate limited" }, { status: 429 });
+  if (response.status === 429) {
+    return NextResponse.json({ error: "Rate limited by the meal estimation service" }, { status: 429 });
+  }
+  if (!response.ok) {
+    console.error(`OpenRouter error ${response.status}`);
+    return NextResponse.json({ error: "Meal estimation service returned an error" }, { status: 502 });
   }
 
-  if (!res.ok) {
-    const detail = await res.text().catch(() => "");
-    console.error(`OpenRouter error ${res.status}:`, detail.slice(0, 500));
-    return NextResponse.json({ error: `Upstream error: ${res.status} ${detail.slice(0, 100)}` }, { status: 502 });
-  }
-
-  const data = await res.json();
-  const text = data.choices?.[0]?.message?.content || "";
-  const m = text.replace(/```json|```/g, "").match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-
+  let data;
   try {
-    let parsed = JSON.parse(m ? m[0] : text);
-    // If it returned an array directly, wrap it in { items: [...] }
-    if (Array.isArray(parsed)) {
-      parsed = { items: parsed };
-    }
-    return NextResponse.json(parsed);
+    data = await response.json();
   } catch {
-    console.error("Unparseable AI reply:", text.slice(0, 300));
-    return NextResponse.json({ error: "Could not parse AI reply" }, { status: 502 });
+    return NextResponse.json({ error: "Invalid response from meal estimation service" }, { status: 502 });
+  }
+
+  const text = data.choices?.[0]?.message?.content || "";
+  const match = text.replace(/```json|```/g, "").match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+  try {
+    let parsed = JSON.parse(match ? match[0] : text);
+    if (Array.isArray(parsed)) parsed = { items: parsed };
+    const items = normalizeItems(parsed?.items);
+    if (!items) throw new Error("Invalid item schema");
+    return NextResponse.json({ items });
+  } catch {
+    console.error("Unparseable or invalid AI reply:", text.slice(0, 300));
+    return NextResponse.json({ error: "Could not validate meal estimate" }, { status: 502 });
   }
 }
