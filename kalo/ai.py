@@ -163,4 +163,3 @@ async def estimate(
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 100_000:
                 raise AIError("Meal estimate service returned invalid nutrition data", status=502)
     return result
-

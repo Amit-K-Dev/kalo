@@ -146,4 +146,3 @@ npm run build
 ## License
 
 Personal and educational use.
-

@@ -377,4 +377,3 @@ async def ai_estimate(request: Request, body: AIIn):
         if exc.status == 500:
             return JSONResponse({"error": exc.message}, status_code=500)
         return JSONResponse({"error": exc.message}, status_code=502)
-
