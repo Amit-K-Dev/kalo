@@ -25,6 +25,9 @@
 
 # Python
 /.venv/
+/.venv-workers/
+/python_modules/
+pylock.toml
 __pycache__/
 *.py[cod]
 

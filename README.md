@@ -55,11 +55,15 @@ environment.
 The FastAPI backend runs as its own Python Worker; it does not replace the
 Next.js frontend Worker. From the repository root, run:
 
-```bash
+```powershell
 uv sync
-uv run pywrangler dev --config wrangler-python.jsonc
-uv run pywrangler deploy --config wrangler-python.jsonc
+.\scripts\run-python-worker.ps1 dev
+.\scripts\run-python-worker.ps1 deploy
 ```
+
+The helper temporarily supplies the `wrangler.jsonc` filename required by
+Pywrangler, then removes it. The checked-in Python Worker config stays separate
+from the Next.js Cloudflare build config.
 
 In the Cloudflare dashboard, open the `kalo-python-api` Worker and add these
 runtime secrets under **Settings → Variables and Secrets**:
@@ -93,7 +97,7 @@ Start the Python API in one terminal:
 python -m venv .venv
 # Windows: .venv\Scripts\Activate.ps1
 # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-cpython.txt
 python main.py
 ```
 
