@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { PLANS, planCalc, waterGoal } from "@/lib/nutrition";
 
-export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg, targets, sumMeals, onAddMeal, onDeleteMeal, onWaterChange, onPlanSelect, switchTab, profile }) {
+export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg, targets, sumMeals, onAddMeals, onDeleteMeal, onWaterChange, onPlanSelect, switchTab, profile }) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [estimate, setEstimate] = useState(null);
   const pending = profile?.plan;
 
   const eaten = sumMeals("kcal");
@@ -30,10 +31,13 @@ export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg,
       const data = await r.json();
       const items = (data && data.items) || [];
       if (!items.length) throw 0;
-      for (const it of items) {
-        await onAddMeal({ name: String(it.name), kcal: Math.round(+it.kcal || 0), p: Math.round(+it.p || 0), c: Math.round(+it.c || 0), f: Math.round(+it.f || 0) });
-      }
-      setQuery("");
+      setEstimate(items.map(it => ({
+        name: String(it.name),
+        kcal: Math.round(+it.kcal || 0),
+        p: Math.round(+it.p || 0),
+        c: Math.round(+it.c || 0),
+        f: Math.round(+it.f || 0),
+      })));
     } catch (e) {
       console.error(e);
       if (e?.code === "rate_limited") {
@@ -45,6 +49,22 @@ export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg,
       }
     }
     setLoading(false);
+  };
+
+  const handleSaveEstimate = async () => {
+    if (!estimate?.length) return;
+    setError("");
+    setLoading(true);
+    try {
+      const saved = await onAddMeals(estimate);
+      if (saved === false) throw new Error("Your estimate could not be saved.");
+      setEstimate(null);
+      setQuery("");
+    } catch (e) {
+      setError(e?.message || "Your estimate could not be saved. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -101,7 +121,7 @@ export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg,
 
       <div className="card">
         <label style={{ marginTop: 0 }}>Describe what you ate</label>
-        <textarea value={query} onChange={e => setQuery(e.target.value)}
+        <textarea value={query} onChange={e => { setQuery(e.target.value); setEstimate(null); }}
           placeholder="e.g. 2 scrambled eggs, a slice of sourdough with butter, and a large latte with oat milk" />
         <button className="btn" onClick={handleEstimate} disabled={loading}>
           {loading ? "Analyzing…" : "Estimate calories"}
@@ -109,6 +129,24 @@ export default function MealsTab({ meals, goal, plan, tdee, weightKg, water, wg,
         <button className="btn2" onClick={() => switchTab(3)}>📸 Or scan a photo instead</button>
         {error && <div className="err">{error}</div>}
       </div>
+
+      {estimate && (
+        <div className="card">
+          <div className="mu">Review this AI estimate before adding it</div>
+          {estimate.map((item, index) => (
+            <div className="item" key={`${item.name}-${index}`}>
+              <div>
+                <div>{item.name}</div>
+                <div className="mu">{item.kcal} kcal · P{item.p} C{item.c} F{item.f}</div>
+              </div>
+            </div>
+          ))}
+          <button className="btn" onClick={handleSaveEstimate} disabled={loading}>
+            {loading ? "Saving…" : "Add estimate to today’s log"}
+          </button>
+          <button className="btn2" onClick={() => setEstimate(null)} disabled={loading}>Discard estimate</button>
+        </div>
+      )}
 
       <div className="card">
         {meals.length === 0 && <div className="mu">No meals logged yet.</div>}
