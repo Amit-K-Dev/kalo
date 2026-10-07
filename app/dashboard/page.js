@@ -221,7 +221,7 @@ export default function DashboardPage() {
             onAddMeals={handleAddMeals}
             meals={meals} goal={goal} plan={curPlan} tdee={tdee}
             weightKg={weightKg} water={water} wg={wg} targets={targets}
-            sumMeals={sumMeals} onAddMeal={handleAddMeal}
+            sumMeals={sumMeals}
             onDeleteMeal={handleDeleteMeal}
             onWaterChange={handleWaterChange}
             onPlanSelect={(planId) => {
