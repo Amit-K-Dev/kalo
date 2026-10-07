@@ -74,6 +74,12 @@ ALTER TABLE meals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE routines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE current_routine ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users manage own profile" ON profiles;
+DROP POLICY IF EXISTS "Users manage own logs" ON daily_logs;
+DROP POLICY IF EXISTS "Users manage own meals" ON meals;
+DROP POLICY IF EXISTS "Users manage own routines" ON routines;
+DROP POLICY IF EXISTS "Users manage own current_routine" ON current_routine;
+
 CREATE POLICY "Users manage own profile" ON profiles
   FOR ALL USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
@@ -111,6 +117,57 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================================
+-- AI usage limit (20 requests per authenticated user per hour)
+-- The table is intentionally inaccessible through the Data API;
+-- callers may only invoke the narrowly scoped function below.
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS public.ai_usage_windows (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  window_started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  request_count INT NOT NULL DEFAULT 0
+);
+
+ALTER TABLE public.ai_usage_windows ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.ai_usage_windows FROM PUBLIC, anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.consume_ai_request()
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_allowed BOOLEAN;
+BEGIN
+  IF v_user_id IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  INSERT INTO public.ai_usage_windows (user_id, window_started_at, request_count)
+  VALUES (v_user_id, pg_catalog.now(), 1)
+  ON CONFLICT (user_id) DO UPDATE
+  SET window_started_at = CASE
+        WHEN public.ai_usage_windows.window_started_at <= pg_catalog.now() - INTERVAL '1 hour'
+          THEN pg_catalog.now()
+        ELSE public.ai_usage_windows.window_started_at
+      END,
+      request_count = CASE
+        WHEN public.ai_usage_windows.window_started_at <= pg_catalog.now() - INTERVAL '1 hour'
+          THEN 1
+        ELSE public.ai_usage_windows.request_count + 1
+      END
+  RETURNING public.ai_usage_windows.request_count <= 20 INTO v_allowed;
+
+  RETURN v_allowed;
+END;
+$;
+
+REVOKE ALL ON FUNCTION public.consume_ai_request() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.consume_ai_request() TO authenticated;
 
 -- ============================================================
 -- Indexes for performance
