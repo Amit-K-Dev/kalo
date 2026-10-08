@@ -1,193 +1,0 @@
-version = 1
-revision = 5
-requires-python = ">=3.13"
-resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version < '3.14'",
-]
-
-[[package]]
-name = "annotated-doc"
-version = "0.0.5"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/5a/8e/38aa427ed5402449e226975b649c5dc73ccadfefeb95e6aecb8f8ea4b6b6/annotated_doc-0.0.5.tar.gz", hash = "sha256:c7e58ce09192557605d8bbd92836d7e1d520ac9580096042c0bfd197efacf1bb", size = 10758, upload-time = "2026-07-28T13:50:58.129Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3e/30/e900b21425a860e195f32e37657aa1f7c7f2b1bfb26f03ca209b90933c06/annotated_doc-0.0.5-py3-none-any.whl", hash = "sha256:117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101", size = 5302, upload-time = "2026-07-28T13:50:57.239Z" },
-]
-
-[[package]]
-name = "annotated-types"
-version = "0.8.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/5f/56/a8120250d128bed162cd73c76d45f6ef9991f3e068f62a8ee060afa3104a/annotated_types-0.8.0.tar.gz", hash = "sha256:13b2beaad985e05e2d6407ee4c4f35590b11f8d693a258a561055cac8f64cab7", size = 15893, upload-time = "2026-07-23T20:16:13.995Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl", hash = "sha256:f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0", size = 13427, upload-time = "2026-07-23T20:16:12.938Z" },
-]
-
-[[package]]
-name = "anyio"
-version = "4.15.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "idna" },
-    { name = "typing-extensions", marker = "python_full_version < '3.15'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a9/d2/f4d173e22df740bc37b1db102b386ba719b66e95b0f0d751f556b387e6d2/anyio-4.15.1.tar.gz", hash = "sha256:9f28306018cbd6d329e64a36d58256edff76dd996fe423bc957326e578b82a94", size = 276966, upload-time = "2026-09-05T10:42:39.44Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/b8/4bd346e22b28902df4d651910f5242c28d84e4a5c2435ca5c3f797ed7e2e/anyio-4.15.1-py3-none-any.whl", hash = "sha256:6152fdbbf9a77fdec97731721bebf7c4c44f7c29b424b0065826173efc7ed101", size = 132079, upload-time = "2026-09-05T10:42:37.923Z" },
-]
-
-[[package]]
-name = "certifi"
-version = "2026.7.22"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a3/c2/24167ea9858356b47a87a50d39908bfdb72ceeefe0041586e704e5376b3a/certifi-2026.7.22.tar.gz", hash = "sha256:741e2c3b351ddf169a738da9f2c048608ff7f2c5cc02f1ebc6b118bb090d5d55", size = 138112, upload-time = "2026-07-22T03:35:12.644Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl", hash = "sha256:62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775", size = 136983, upload-time = "2026-07-22T03:35:11.276Z" },
-]
-
-[[package]]
-name = "click"
-version = "8.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c7/0e/7fa0ef50764b67090eca4114772a2abf8b6148198475e54c660b97caeee6/click-8.5.0.tar.gz", hash = "sha256:ba0d2089de75ea0310e2dde03160e6ca10009947fb95a182f9b54021bb272e34", size = 382235, upload-time = "2026-08-26T13:33:14.56Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl", hash = "sha256:255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360", size = 125251, upload-time = "2026-08-26T13:33:12.928Z" },
-]
-
-[[package]]
-name = "fastapi"
-version = "0.142.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "annotated-doc" },
-    { name = "opentelemetry-api" },
-    { name = "pydantic" },
-    { name = "starlette" },
-    { name = "typing-extensions" },
-    { name = "typing-inspection" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/56/4f/f7c30a73127e0a8bbffe788369b8359e530b01ae06e2757936fa35bc5e6d/fastapi-0.142.2.tar.gz", hash = "sha256:06366626f2e70576367714d9ab2fe8472e6c8456dba69b399f9f797ab5e92570", size = 466721, upload-time = "2026-09-30T09:51:11.277Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/b6/78aaf9141fb46742928c113f3cf6ef2259d538cb02b604b7656c1dc9883c/fastapi-0.142.2-py3-none-any.whl", hash = "sha256:bd5f4d81f1e93a88bcd77caf4dfe3c2dbffc3805407a0007e9a114c18b3a670b", size = 144409, upload-time = "2026-09-30T09:51:09.8Z" },
-]
-
-[[package]]
-name = "h11"
-version = "0.16.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/01/ee/02a2c011bdab74c6fb3c75474d40b3052059d95df7e73351460c8588d963/h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1", size = 101250, upload-time = "2025-04-24T03:35:25.427Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86", size = 37515, upload-time = "2025-04-24T03:35:24.344Z" },
-]
-
-[[package]]
-name = "httpcore"
-version = "1.0.9"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "certifi" },
-    { name = "h11" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/06/94/82699a10bca87a5556c9c59b5963f2d039dbd239f25bc2a63907a05a14cb/httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8", size = 85484, upload-time = "2025-04-24T22:06:22.219Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7e/f5/f66802a942d491edb555dd61e3a9961140fd64c90bce1eafd741609d334d/httpcore-1.0.9-py3-none-any.whl", hash = "sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55", size = 78784, upload-time = "2025-04-24T22:06:20.566Z" },
-]
-
-[[package]]
-name = "httpx"
-version = "0.28.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "anyio" },
-    { name = "certifi" },
-    { name = "httpcore" },
-    { name = "idna" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b1/df/48c586a5fe32a0f01324ee087459e112ebb7224f646c0b5023f5e79e9956/httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc", size = 141406, upload-time = "2024-12-06T15:37:23.222Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad", size = 73517, upload-time = "2024-12-06T15:37:21.509Z" },
-]
-
-[[package]]
-name = "idna"
-version = "3.20"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f5/08/8eea9d4b8302028f3abb2c0813953f7aec26d33b7a8960ed760e65ff29fa/idna-3.20.tar.gz", hash = "sha256:a7db850025b95ded1eae8a46181a1a6c56c92c96f0e2b005d9ff8dc0210cab44", size = 216463, upload-time = "2026-09-17T14:11:04.752Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl", hash = "sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c", size = 69583, upload-time = "2026-09-17T14:11:03.168Z" },
-]
-
-[[package]]
-name = "kalo-python-api"
-version = "0.2.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "fastapi" },
-    { name = "httpx" },
-    { name = "python-dotenv" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "workers-py" },
-    { name = "workers-runtime-sdk" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastapi", specifier = ">=0.115,<1.0" },
-    { name = "httpx", specifier = ">=0.27,<1.0" },
-    { name = "python-dotenv", specifier = ">=1.0,<2.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "workers-py" },
-    { name = "workers-runtime-sdk" },
-]
-
-[[package]]
-name = "markdown-it-py"
-version = "4.2.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "mdurl" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/06/ff/7841249c247aa650a76b9ee4bbaeae59370dc8bfd2f6c01f3630c35eb134/markdown_it_py-4.2.0.tar.gz", hash = "sha256:04a21681d6fbb623de53f6f364d352309d4094dd4194040a10fd51833e418d49", size = 82454, upload-time = "2026-05-07T12:08:28.36Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/81/4da04ced5a082363ecfa159c010d200ecbd959ae410c10c0264a38cac0f5/markdown_it_py-4.2.0-py3-none-any.whl", hash = "sha256:9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a", size = 91687, upload-time = "2026-05-07T12:08:27.182Z" },
-]
-
-[[package]]
-name = "mdurl"
-version = "0.1.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
-]
-
-[[package]]
-name = "opentelemetry-api"
-version = "1.45.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/2e/02/6e0ae9cc61bd3169d401077b507b3ebc344745171e1051ab430be012dcd9/opentelemetry_api-1.45.1.tar.gz", hash = "sha256:aa38ed19bcc084ba42782a73255b3582283eced7ad6dddbd6695189e69adfb75", size = 72804, upload-time = "2026-10-06T17:32:58.133Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/41/f7dcf80b81ee8e71c1a2b59f14208bc723edbd89ed027a73b175abf6348e/opentelemetry_api-1.45.1-py3-none-any.whl", hash = "sha256:b31553efa588ae44bc306f863c785c5333a9ecc091248c6ee68b4b6c87fdedfb", size = 60256, upload-time = "2026-10-06T17:32:33.506Z" },
-]
-
-[[package]]
-name = "pydantic"
-version = "2.13.5"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "annotated-types" },
-    { name = "pydantic-core" },
-    { name = "typing-extensions" },
-    { name = "typing-inspection" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/53/ef/fc4f868f4e2cee79f863883abffceff107875f569b848507319842d2a681/pydantic-2.13.5.tar.gz", hash = "sha256:51a9c5f7b2f8e636f04c6cada605d9b6a3bf1348fdf945a3d8869b19bba0ee08", size = 845750, w]=Ó‹h‘éì¶»§q«^tÌÍÌØYMÌLÎXŒ˜XÙ™L˜ÙYÎNNŒ˜XÙXMÌÍYNXØÌŒÎØ™Œ‹Ú^™HHMÍŒÌŒK\ØY][YHHŒŒ‹LKLMUMŽŒLËŒLÍˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÌÙKØMNMMÎ˜Y™XÌXYLØÌØØŒÌØNÙ˜Ø™ŒXÌMØXÍ˜™LNY™ŒMLKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^Ì—ÌÌWÜš\ØÝ›X[ž[[^Ì—ÌÎWÜš\ØÝÚ‹\ÚHœÚLMŽYÌMYÎ™XÌ™LM˜Ì˜ÌÌ™MLÍÌØMŒMMÙXYYYY™XMØØ˜YL˜XX˜ÌÌÈ‹Ú^™HHMÌNMM‹\ØY][YHHŒŒ‹LKLMUMŽŒLKŒMÍˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍÎÙÌLLLMØÎŒ™ÌXÙŒÍMŒÍÙØMYLÌÍ™ŽL™MØŒŽLŒŒŒÙLMËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ØX\˜ÚÚ‹\ÚHœÚLMŽXÙŒÙYÍMÌÌLNMXLM™LYY˜ÌL™ŒÍMŽXŒXYMÌÌM˜ÍY˜Í™MH‹Ú^™HHLMÍÎK\ØY][YHHŒŒ‹LKLMUMŽŒLLKŒVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌNKÌ™‹ÎLXÎÙL™M˜™NŒMŽXMÙÌMÎNLMÌŒ™YMŒLØØYYKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—Ø\›]ÛÚ‹\ÚHœÚLMŽ˜ØÌŽY˜MÌÌŽŒ˜ÎYYØÙXÌ˜YŽYŒŒMÌØÍMYŽŒÌØÌMMŒÌYŽÍÈ‹Ú^™HHLŒM‹\ØY][YHHŒŒ‹LKLMUMŽŒLLËŒL–ˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙËÙËÌXÌÙŽŽLÍŒLÍX™MØ˜XÌXŒLXMŽNYNNÌŒØMYŒÙŒÍŒ‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ÚMŽ‹Ú‹\ÚHœÚLMŽ˜MÍØNLXÌ™LNMÍŒÍXÌØÙLLYMLXXX˜ÌÙ˜MM™Ž™Œ˜™YXŒ™X˜˜ØŽN‹Ú^™HHLÌŒÎM‹\ØY][YHHŒŒ‹LKLMUMŽŒLMKLMÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÎÌKÎ™ŒŽÍMM™™ŽXÌØLLLŽX˜NXY™XŒMMXÙŒYÍÍŒØÙŒLÌŒXÎMXËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ÜÍKÚ‹\ÚHœÚLMŽŽXYMMMYÌMÎN˜ØØL˜ÍÌXŒYÙŽMXÍ˜YYXM™˜ØŒÙXÍ™XXÍŒ˜™Lˆ‹Ú^™HHLNŒ\ØY][YHHŒŒ‹LKLMUMŽŒLMËŒÍVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÌKÌKÌ˜ÍŽMY˜Ì˜LŒÙŒŽLXNÍYØ˜ŒŽLÎXYMØŒÙ™˜LYŽŒMØÙNNMXËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—Üš\ØÝÚ‹\ÚHœÚLMŽ˜ÙMXØŒØM™˜XŒŒØLÌYÍM˜LXMXŒ˜ÎMØØŒMÌŒNMŒŒMÎ˜˜ÎØMˆ‹Ú^™HHLMÎË\ØY][YHHŒŒ‹LKLMUMŽŒLNKŒÎNˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÎXKØYKØÌLLÍÍØŒM˜XØLŒXŽLMØXÎYYÎLMMÌ™ÌÙXÌÌY˜ÙL™ŽÙM‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ÜÌÎLÚ‹\ÚHœÚLMŽ™Ž™MŒYØ™YÙ™MYŒŒÍÍMNX™M™ØXŽMÌØÎYÍÍØNLÌLMYÙÍÍˆ‹Ú^™HHLÍMÍÌÎK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒKŒNVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌËÙŒÍMLŒÎYLØXM˜LŽMXÍÍMŒÙLLÌYÎLŽÍXŒXMÙXMÌ˜LKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—Þ—ÍÚ‹\ÚHœÚLMŽŒŽLÌMYXMXŽNNLØÍXYLÌMØ˜ØL™M˜˜ÍÎXYÍLLØ™YNYNÎNY‹Ú^™HHLŒMM‹\ØY][YHHŒŒ‹LKLMUMŽŒLNŒËŒÍˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍÌËÍL‹ØMØŒ˜LŒLLÍ™˜ÙŽL™LMØ™XXXYMLYLLŒØØÌ™LŽL™ŒÍMLŒXÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM]Ú[ŒÌ‹Ú‹\ÚHœÚLMŽLMÌÌÙŽLYNMÌŒÎXØLLLŽŒÍŒØÙM™YXYYÎMÙMÍÍÙ˜ÌXÌÌŒŒ˜ÌNXMÈ‹Ú^™HHLNÍ‹\ØY][YHHŒŒ‹LKLMUMŽŒLNŒVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌØKÎKÍÎY™™™ŒØMMŒLÍŽNYŒØÌNMLX™ØÍÎÍÌMMYÌYYXLL‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM]Ú[—Ø[YÚ‹\ÚHœÚLMŽŽNÍÌØXXÙ™YXLÍX˜˜™ÙÌNMÍÎMŒŒŒYXMØXL™LYŒYLM™LŒÍÎÌØ™Lˆ‹Ú^™HHLÎ\ØY][YHHŒŒ‹LKLMUMŽŒLNKÍMÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÍËÌX‹ÌÎYLMÌML˜˜ØLMYNMLYNLNMNMŽ˜Î™ÙMÎÌŒ˜™ÍŒÙ˜MŽMKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM]Ú[—Ø\›MÚ‹\ÚHœÚLMŽ™ÙL™MMÍM™ŽXX™™Y™MÎÍX˜Ø˜ÍÌXÌXØÎLÎXÙXXXXÍÌÍMˆ‹Ú^™HHLŒLK\ØY][YHHŒŒ‹LKLMUMŽŒLNËŒM–ˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙÌØÙŽMÌÎMMM™ÌÙXMXMÙÙMY™ÌÌŒXŒÌ™ØYÎ˜ÙXXLØYKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[XXÛÜÞÌLÌMWÝ[š]™\œØ[‹Ú‹\ÚHœÚLMŽMŒØ™MŒØŽMŽYØÌ˜Ø™XÌŒXŒÌÙMLL˜™YLXÍÎMŽYŒŒMÎXLYH‹Ú^™HHÌŒLML\ØY][YHHŒŒ‹LKLMUMŽŒLNŒKŒÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÎÙÍ™NŽYØL˜ØXÌYMÎMŒÍ˜ÙÙÌŽLØYMYŒØÍYØXLMNMLMÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[XXÛÜÞÌLÌMWÞ—ÍÚ‹\ÚHœÚLMŽŽÌÍLŒLM˜ŒÙŒ™˜MÙŒŽNMXÍYNŒÙŒ™Ì˜˜™ŽÍŒLMLNLYÎYŽXˆ‹Ú^™HHMÍM\ØY][YHHŒŒ‹LKLMUMŽŒLNŒ‹ŽŒ–ˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÎØÍ‹ÎMXNMŒ˜™˜ÎÌ˜Ø˜MŒÎLÙLŒØØÌŽML™˜Ø˜Ø˜ØXŽLLÙMÌÎLLÍŒKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[XXÛÜÞÌLWÌØ\›MÚ‹\ÚHœÚLMŽÍÙMNÌØÍNYLY™ŽYŒÎX˜Ù™˜˜™XLÌÌMXŒMY˜ÎMŽ˜NXŽÌÍŽMM™™‹Ú^™HHMŒLÌË\ØY][YHHŒŒ‹LKLMUMŽŒLNŒŒŒNˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØM‹ØLËÌLL™ŽLÎYMÌYYÌÎLØXYMÌXXNXÍLLMMLÙLÌMMYM™LÍÌ™™˜ŽKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^WÚMŽ‹›X[ž[[^Ì—ÌŽÚMŽ‹›X[ž[[^Ì—ÍWÚMŽ‹Ú‹\ÚHœÚLMŽ™MÌLŒÎÍÌÍ™XMÌÙYLŽÙMLØÍ™NXLMN˜™MÍŽXYXÙÌNNXÍÙˆ‹Ú^™HHNMK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒKŒÎVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍ‹ÍŒËØ˜ŽY˜MÌŽXMNLÌLÍÎ˜XÌØÙLÌÙM™MM˜L˜ÙXML‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^ŒMØX\˜Ú›X[ž[[^Ì—ÌM×ØX\˜Ú›X[ž[[^Ì—ÌŽØX\˜ÚÚ‹\ÚHœÚLMŽŒY˜LÍÍØÍÍØYYYŽØÍMÎLÌÍÌXØLMM˜LÍÎŒLLXLNLY™˜ÌÍŒˆ‹Ú^™HHMÌÍK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒLKŒLVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍMKÌ˜KÌÍÎXXMLNNN™ŽXYŒŽLNMÌL˜ÌMNLŽÙMÙ™ÎMLÙLÌXŒYŒØ‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^ŒMØ\›]Û›X[ž[[^Ì—ÌM×Ø\›]Û›X[ž[[^Ì—ÌÌWØ\›]ÛÚ‹\ÚHœÚLMŽŒÍM™ÌYMNLÙŒÍYÌÎNYŒŽMÌÍÎXŽLYLŒŒÌYYŒ™˜Y˜MLŒÙH‹Ú^™HHML\ØY][YHHŒŒ‹LKLMUMŽŒLNŒL‹ŽLVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌMKÙKÌŒØYŽMŽMXÌŽÍÙ™MÎM˜Y˜ÍÌÙXÍÙŒŒŽX˜ÌLŒÙXÌÌŽYMNLŽNÌKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^ŒMÜÍK›X[ž[[^Ì—ÌM×ÜÍK›X[ž[[^Ì—ÌŽÜÍKÚ‹\ÚHœÚLMŽ˜ŒÌÌXL˜™L˜YL™ØØŽYX˜YXØÌYYYXXŒŒÙ™ŽNŽXLŒŒŒØÙYMŽYXÍ™ˆ‹Ú^™HHNÍ\ØY][YHHŒŒ‹LKLMUMŽŒLNŒMˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌ˜KÌ‹ØÙŒXŒÍLÙŒMŽXØŒXÍŒÙLMŒ˜LŒŽXÙÍNÍÍM™NYŒØ™Œ™LÎNÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^ŒMÜÌÎL›X[ž[[^Ì—ÌM×ÜÌÎL›X[ž[[^Ì—ÌŽÜÌÎLÚ‹\ÚHœÚLMŽXØMMNÎLŒØ˜MMÍMYXÌŒÌŒ˜ŒÌÙMŒMŒXŒÍMMYYMØŽŒŒ˜ŒØÍ˜ÌMÈ‹Ú^™HHNLÌË\ØY][YHHŒŒ‹LKLMUMŽŒLNŒMKŽMŽVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍMÙM‹ØM˜ŒX˜LÙŒÎLÎLØÍ™LLMXMØXÎLÍMMÌLLŒM˜ŒYØMØÍLY˜Ì˜ØKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^ŒMÞ—Í›X[ž[[^Ì—ÌM×Þ—Í›X[ž[[^Ì—ÌŽÞ—ÍÚ‹\ÚHœÚLMŽŒÍYLNLYMÌŒÍÎMY™™LNÌMLØNY˜™ŽÌ˜Ù˜™YÙŒL™Í˜ŽNY‹Ú^™HHMÎÌL‹\ØY][YHHŒŒ‹LKLMUMŽŒLNŒMËŒÍˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍ™KÍÎYMXÌM™X˜MM™™X˜XXŽYLNMÙLMYLÙÎL™˜ÌŒØÙØLMMÍLX‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[X[ž[[^Ì—ÌÌWÜš\ØÝ›X[ž[[^Ì—ÌÎWÜš\ØÝÚ‹\ÚHœÚLMŽ˜ÌLMÍX™LLÍLXXLY™ŒŽYNMLYMÌÌÌXÙ˜ÙŒXÙLNÎNXŽØNNH‹Ú^™HHMÍM‹\ØY][YHHŒŒ‹LKLMUMŽŒLNŒNÎVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÌËÌÌ‹ÙŒÙ™ÙÌÌÙŽYLÙŒÙNXÎXX™Y˜˜ÌŒÙLYMXÙ˜MÙ™Y˜YX˜YLØØM™ŒKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ØX\˜ÚÚ‹\ÚHœÚLMŽŒLŒÌ˜X˜LÙ˜˜˜Í˜ÎYM™ŒMÌÌXÍY˜ŒÌM˜ÙLYM™ŒÙL™XYMH‹Ú^™HHLMLŒŒNK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒŒMˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌKÎYÌ˜ŽYÎX˜ÌÙŒÍÍLYÌY™ÍŒŒYÎY™YXŒL˜M™˜ËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—Ø\›]ÛÚ‹\ÚHœÚLMŽ™LM™YŒÌÍLXÙ™YYNŒŒLÌLÍÌ˜LÙXLMÌXÍÌØŒÙ˜Í™MŽMÌÍLÎMÌ˜ÍH‹Ú^™HHLLÌÌK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒŒ‹Ì–ˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØ˜‹ÎLËÌŒÎLYŒXYXÙŽNÌ™XŒÙŒ™XLLMYXLŒMMŒŽXYÍMMÍNMŽÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ÚMŽ‹Ú‹\ÚHœÚLMŽ™XLØÌ˜MØŽLŒYMÙNX™˜NLYÎXŽXÙM™˜LL™Œ™ŒÍ˜YMMLMÎŒŒŒÈ‹Ú^™HHLÌŒŽ\ØY][YHHŒŒ‹LKLMUMŽŒLNŒŽLNˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙÌŽKØÍÎÌ˜Ù˜ÌÙMÙ™ŽŽYŒYXØÍLY™YYMÙÙMLXLYŒMÙ™XÍLÙ‹ÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ÜÍKÚ‹\ÚHœÚLMŽ˜ÌL˜ÎÙLÎNÎLLÌYŒXNLÍŒMŒÙLYØØY™˜ŽYMÎÎYXØMÍÌ‹Ú^™HHLLŒŒK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒ‹ŽÌÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙL‹ÙŒÍY™YŽÍØÍXÌL™MÎXYXLŒL˜NXLXŒÍØÍMŽÙLYŽNŽM˜LËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—Üš\ØÝÚ‹\ÚHœÚLMŽ˜NMÎÎLÍYXŒ™MYŒŽLŒÌÙŒŒÙMYÙÌYXLY˜YLMŽÙ˜™˜ÎÍL‹Ú^™HHLNŽNLK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒŽKŒNˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÎLÌÌËÍØNYÌMNXÙ™ŒYŒN™ÎYŒNNLYM˜ÎNLÙŽXŒ˜Ù˜ÎMÍØX™YŽNÌ˜KÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—ÜÌÎLÚ‹\ÚHœÚLMŽŒYŽ˜ÍLÙLMNLXXŒ™MNŒŒYLÙ˜YXÍÍØXLMÌMÍŒLX˜˜Ì™˜ØLL‹Ú^™HHLÍNLL\ØY][YHHŒŒ‹LKLMUMŽŒLNŒÌKLVˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌ‹ÌÌŒXŒM˜ÍLLØYXLYŽMŽMÙNÍÎÎY™ŽÌX™™Œ™XLŽXÍ™™™LL™ŽÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM[]\Û[^ÌWÌ—Þ—ÍÚ‹\ÚHœÚLMŽŒYY˜XØÙXNYN™ŒMLYXÌÌXÌLÍŽYŽ˜YXŽÌN˜ÙLLÙLÍŽ˜ØÍXÍŒÍÈ‹Ú^™HHLŒLŽË\ØY][YHHŒŒ‹LKLMUMŽŒLNŒÌËÍÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØŽKØLËÍŽX˜™NLÌÍYXY˜Î˜MXŒŽLŒÌØÍXÌŽŽXŽLÍŽMXŒØXŒ™ØÙ™LNNKÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM]Ú[ŒÌ‹Ú‹\ÚHœÚLMŽŒ™MØYØXŒØÙŽ™LÎMÌØNÙYMM™ÌÙŽLNXNØXØÙXÌÙÙLL‹Ú^™HHLÎLLÍË\ØY][YHHŒŒ‹LKLMUMŽŒLNŒÍKÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍÍKØŽXØM™LYMŽØ˜Ì˜˜ŒMØÙLŒÍÌYMØXÌ˜LLŒÍŒ™ÍÙŽYX™ËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM]Ú[—Ø[YÚ‹\ÚHœÚLMŽŒØŒÌXÙMŒNLŽXYŒØŒ™ÌÙY˜ŽLÍÍÙMXNXÍ˜Î™ÙY™MÌÈ‹Ú^™HHMŽML‹\ØY][YHHŒŒ‹LKLMUMŽŒLNŒÍ‹ŽÖˆˆKˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍŽÍMKÌ˜ÍÌÍNY™YŒNMMXXŒÙMÙMÍYMYYŽY˜ÎÌØMÌŽÍYŒŒŒ™˜˜ÌLËÜZœÛÛKL‹ŒŒKXÜÌMXÜÌM]Ú[—Ø\›MÚ‹\ÚHœÚLMŽŒMYŒ˜YXNYÍXÍ˜ÌXÍŒŽMÍÍÎMÎXØXÌLÍÙÌXÌÙŒXŒL˜ÍØNØØˆ‹Ú^™HHLŽLŒK\ØY][YHHŒŒ‹LKLMUMŽŒLNŒÎÌL–ˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHœ[ÙYKXÛH‚™\œÚ[ÛˆHŒKŒ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆB™\[™[˜ÚY\ÈHÂˆÈ˜[YHH˜ÛXÚÈˆKˆÈ˜[YHHœšXÚˆK—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙŒKÍÙ™MÍYLÙMÍÍ˜™M™˜YN™LÍÌL™™ÍYMMLŽNXYNLØŒŒÌÌNXNMÜ[ÙYWØÛKLKŒ\‹™Þˆ‹\ÚHœÚLMŽŒMŒÎMÙMÎLMMNŽMÍ™ŒL™ŽYŽMŒNLÌÍŽLM™™LÙY˜™Œ™LÎ™LÍXÈ‹Ú^™HHLŒÌ\ØY][YHHŒŒ‹LKLŽÎŒŽNŒ‹ŒŒÖˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍKÌËÍÍŽMÍØ˜™ÌØÍŽ™MY˜˜ÌÍŽXÍ˜ÌÌÍŒMNÌLXŒ˜˜LMMXX™LÙLØNØŒ‹Ü[ÙYWØÛKLKŒ\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽŒÌÌÍ™ŒY˜ÎNLÎM™YNLÌÌ™Ì™NŽÙYYŒNXŒ˜ŒY˜LYY™LŽXÈ‹Ú^™HHLŽ\ØY][YHHŒŒ‹LKLŽÎŒŽNŒKLÖˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHœ[ÙYK\H‚™\œÚ[ÛˆHŒŒŽKH‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆBœ™\ÛÛ][Û‹[X\šÙ\œÈHÂˆœ]Û—Ù[Ý™\œÚ[Ûˆ	ÌËŒM	È‹—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌYÎKÙYXL™LL˜ŽMYN™YÌ˜ÎLÙŒ˜YX™ÌM™Œ™MXÙ™LXÍ™KÜ[ÙYWÜKLŒŽKK\‹™Þˆ‹\ÚHœÚLMŽ˜LÎLYXÎMYL™L˜ŒÙNX™LÌMÍ˜ŒŒÙŒÌŽMLŽMLØ˜ÌÙNYŽM˜MYYLÙ˜XÙ‹Ú^™HHNÎNK\ØY][YHHŒŒ‹LKLMUŒŽŒŒŒNˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÎ‹ØŒËÌLÍÙX˜ÙÍYLM™LÎLÍÌMÌ˜ØXÌ™XÎYYXY™ØMÎXÌX™ÎLY˜ÍÍMËÜ[ÙYWÜKLŒŽKK\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽŽY™Œ˜ÍLMÙŒXŒYNMÍÍŒŒNMÙŒY™XMMÍÌY™Î˜™ÌÎLØÎL™MÎLÍL˜ˆ‹Ú^™HHŒMË\ØY][YHHŒŒ‹LKLMUŒŽŒŒ‹ŽˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHœ[ÙYK\H‚™\œÚ[ÛˆHŒÌMŒÈ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆBœ™\ÛÛ][Û‹[X\šÙ\œÈHÂˆœ]Û—Ù[Ý™\œÚ[ÛˆH	ÌËŒM	È‹—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙŽKÎNÙŒÌŒÙL™XÍL˜˜˜Œ˜ÌÙŒÎYYŒ™NYMÍÙ˜Y˜™ŽLLXX™XŒÍÜ[ÙYWÜKLÌMŒË\‹™Þˆ‹\ÚHœÚLMŽ˜LÌÍÍÍÎM™ŽXÍLXÌLÎLÙYŒŒŽMXYMØLMLYNM˜ÙXŒXLXM™MMYŽYMH‹Ú^™HHŒŽMK\ØY][YHHŒŒ‹LKLMNŒÎŒÍKŒMVˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙÙXËÙŒŽYNLMØŽMÌLÍÍ˜N˜™YØ™™ŒÙŒXŒL™™ÍÎL™ŒXXÍ™MÙÎMÜ[ÙYWÜKLÌMŒË\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽÍLÍÍØÍŽMŒÎNŒÙXNMŒÌÌŒ™Y™LØ˜™XÍNNMY˜™ÌÎNNYMŽMXÍ™LÍYLÈ‹Ú^™HHÌÌË\ØY][YHHŒŒ‹LKLMNŒÎŒÌËˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHœ]Û‹YÝ[ˆ‚™\œÚ[ÛˆHŒKŒ‹‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆBœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍÍÌ‹Ì™˜™YYŒŒNMÎØMYYXMMLXÍÍLÌ˜ØXÍLYŽÙŽY™˜XLÍLÍÌÙŽ‹Ü]Û—ÙÝ[‹LKŒ‹\‹™Þˆ‹\ÚHœÚLMŽ™ŒLÙMŽNLÍXNLXÌØÍÎŒØXØXXØÙØX™YŒŽLŒÎ˜MÍ˜ŽŒLŽLŽÌØÌ‹Ú^™HHŒ\ØY][YHHŒŒ‹LLLUNŒÍŽŒLˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍŒÙKÌÎŒØLÍNNXNXXÌNÎLÙMÌÍ˜YØÍÍÍŒMŽXŽØØ™XØLÍLÍÌ‹Ü]Û—ÙÝ[‹LKŒ‹\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽŒŽXNMXŒÙ™M™˜M™ŒÙŒNX™YLÌMÍMÍ˜XÙŒÙÍMMYXL™È‹Ú^™HHŒÌ‹\ØY][YHHŒŒ‹LLLUNŒÍŽŒŒÌÖˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHœšXÚ‚™\œÚ[ÛˆHŒMKŒŒ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆB™\[™[˜ÚY\ÈHÂˆÈ˜[YHH›X\šÙÝÛ‹Z]\HˆKˆÈ˜[YHHœYÛY[ÈˆK—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÌÎ‹ÌÌŒ˜ØNLØÎØÌLØM˜LÍŽM™XÙŒÍMÌÌ™LXÍMÌXÍÍYŒÍÌY˜ØLÙNKÜšXÚLMKŒŒ\‹™Þˆ‹\ÚHœÚLMŽ™YØMÍ˜NY˜ØXÎX˜ÍÍLLÍ™NMÎ˜˜™˜™™ŒYLL˜ÌÌXŒŽÌÍˆ‹Ú^™HHŒÌŽ\ØY][YHHŒŒ‹LLL•ŒŒÍVˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÎ‹ÌØ‹ÍNYÌÙŽLX˜MXNÌNN™ŒÙŒXNŒXÌYÍMMÍŒŽÍŽYLŒÍX™KÜšXÚLMKŒŒ\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽŒÌØ™YÍŒÌ™˜ÌÙ™NLÎXLMÍÌNÙŒMŽXÌXÎNØYÙŽM™MLÙL˜ˆ‹Ú^™HHÌLM\ØY][YHHŒŒ‹LLL•ŒŒ‹ŽÖˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHœÝ\›]H‚™\œÚ[ÛˆHŒKËŒ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆB™\[™[˜ÚY\ÈHÂˆÈ˜[YHH˜[žZ[ÈˆK—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍØ‹Ì˜‹ÌÎLÍ˜™ÙYÌXŒMŒ™X˜LÌYY˜Í˜Ù™™™ŽM™MMÍÙX˜Œ˜ŒÌM™ŽM™LÙKÜÝ\›]KLKËŒ\‹™Þˆ‹\ÚHœÚLMŽ˜ÍÎYÍXMŒØÙ™ÍŒN˜˜™˜ŒN™ŒYLÌ™ØŒMÌÍXLX˜XY™™Y‹Ú^™HHÌÍŒ‹\ØY][YHHŒŒ‹LKLŒÕÎŒÌŒ‹ŒÍVˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍKÙ‹ÌYXÌXŒŽLŽYL˜ŒÎNXŒYLYÍØLÌÎLŒÌŽ˜YŒŒŒM™™LÍØMÙŽMËÜÝ\›]KLKËŒ\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽÙŽNNNMMLÙŽLLXLÙŒLLÌMY˜ÙYX™XYMMÌ˜ŽYÙ˜Í˜NYŒMLXÎLÙH‹Ú^™HHÎN\ØY][YHHŒŒ‹LKLŒÕÎŒÌŒMÖˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHH\[™ËY^[œÚ[ÛœÈ‚™\œÚ[ÛˆHŒM‹Œ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆBœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙ‹ØØËÍŒLÌLÌØX˜ŒLÎ˜ÌÌÌ˜ÙX™˜™L˜ÍLŒMYÍ˜X™L˜ÍÌMXØÍLŽ˜Y‹Ý\[™×Ù^[œÚ[ÛœËMŒM‹Œ\‹™Þˆ‹\ÚHœÚLMŽ™ÎNÙNXMLXÎM˜MÌŒ™YM˜X™ÌÎMØÌXNYLØÍÙNLÙX™ŒXMÙMH‹Ú^™HHLLÍMMK\ØY][YHHŒŒ‹LËL•ŒKŽL–ˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍKÙËØŽXNŒMLY˜ÌŒŒÙŒÎLÌÍÍXÍYXLLÎ™XÍÌÙMMÌ™˜ÎÝ\[™×Ù^[œÚ[ÛœËMŒM‹Œ\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽXØXMLÍÍNLØÌXŒMÍ˜YLMNMÙŒYØMLÎXÙNXÙ™XŒÙŒÍLÎŒÍÌÌ™N‹Ú^™HHMMÌK\ØY][YHHŒŒ‹LËL•ŒNVˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHH\[™ËZ[œÜXÝ[Ûˆ‚™\œÚ[ÛˆHŒ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆB™\[™[˜ÚY\ÈHÂˆÈ˜[YHH\[™ËY^[œÚ[ÛœÈˆK—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØLËÌ‹ØŒXŽLNMXØØÌØÌLL™M˜ŒÍNŒÍ˜MŒYXL™ÌÙNŽLLÍŽMNMÍXLÝ\[™×Ú[œÜXÝ[Û‹L\‹™Þˆ‹\ÚHœÚLMŽMÌÍ˜M˜ŒMMŒXØÙMXØÎMLŽNNXMMÎMÌÍÙMYÌYŒYŽYLØ™XMÈ‹Ú^™HHÍŽLŽ\ØY][YHHŒŒ‹LLL•LŽŒÍÎŒKŽNMÖˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÍËÎKÍYÙMLMÌ˜ØXÍYY™NXMÎXM™L™LŽX™LMMYX™˜™KÝ\[™×Ú[œÜXÝ[Û‹L\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽXŽÎMØ˜LÍØØØ˜ÙLMM˜XXØÙ˜ÎLYM™LÌØÎLŽŒÍM˜ØNÌ™ŒÙŒMÈ‹Ú^™HHMÍL\ØY][YHHŒŒ‹LLL•LŽŒÍÎŒˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHÛÜšÙ\œË\H‚™\œÚ[ÛˆHŒKŒMËÈ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆB™\[™[˜ÚY\ÈHÂˆÈ˜[YHH˜ÛXÚÈˆKˆÈ˜[YHHœZœÛÛHˆKˆÈ˜[YHHœ[ÙYKXÛHˆKˆÈ˜[YHHœ[ÙYK\H‹™\œÚ[ÛˆHŒŒŽKH‹ÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆKX\šÙ\ˆHœ]Û—Ù[Ý™\œÚ[Ûˆ	ÌËŒM	ÈˆKˆÈ˜[YHHœ[ÙYK\H‹™\œÚ[ÛˆHŒÌMŒÈ‹ÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆKX\šÙ\ˆHœ]Û—Ù[Ý™\œÚ[ÛˆH	ÌËŒM	ÈˆKˆÈ˜[YHHœšXÚˆKˆÈ˜[YHHÛÜšÙ\œË\[[YK\ÙÈˆK—BœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÙM‹Ù˜ËÙNYMÍÎMŒXÎXŒ™MÍÙ˜NLNMM˜ŒÎMŒ™ŽMXX˜ÌNM˜ŽLLÌŒÌÎMËÝÛÜšÙ\œ×ÜKLKŒMËË\‹™Þˆ‹\ÚHœÚLMŽ˜ŽLÍÙŽXÎØÙLŒM™XØ˜Œ˜˜NM™L˜ØÍØŒÎMØŽMMLØÎYLYM™ŽŒ˜ØØØÈ‹Ú^™HHÍÎ‹\ØY][YHHŒŒ‹LLL•ŒNŒNL–ˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËÌËÙLËÍÙNYŽLÙŒLØ™Y™LØXÙŽXÍ˜YÌŒÍØMYMÙX˜ÙLÙŽMÌŒ™LXKÝÛÜšÙ\œ×ÜKLKŒMËË\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽ˜ŽLLÍÎNÌN˜YÍŽYY˜ØØXLÙXLŒX˜ÌÌŒÙ™X™™YXŒ™™˜ŒH‹Ú^™HHNML‹\ØY][YHHŒŒ‹LLL•ŒNŒMKŒM–ˆˆK—B‚–ÖÜXÚØYÙWWB›˜[YHHÛÜšÙ\œË\[[YK\ÙÈ‚™\œÚ[ÛˆHŒKŽKŒÈ‚œÛÝ\˜ÙHHÈ™YÚ\ÝžHHšÎ‹ËÜ\K›Ü™ËÜÚ[\HˆBœÙ\ÝHÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØÎKÌ‹ÌŒM™ÍLÎŒLÌXLLYLŽŽXÍXYMNXYX™™™ŒLŽMNYØMKÝÛÜšÙ\œ×Ü[[YWÜÙËLKŽKŒË\‹™Þˆ‹\ÚHœÚLMŽ™Œ˜ÌÙ˜ŽLÎXNYLØL™XÎ™XÍMÍ˜YYMŽML™MMMÌMLŽYXXL™H‹Ú^™HHMÌŒLË\ØY][YHHŒŒ‹LLL•ŒNŒNKŒVˆˆBÚY[ÈHÂˆÈ\›HšÎ‹ËÙš[\Ëœ]ÛšÜÝY›Ü™ËÜXÚØYÙ\ËØXKÌ‹ÎMÌ™˜XMM˜™ÙŒÎLYLLŽ™LLÌ˜NYXÎYŒÌŽLXMŒØMÙŽXÎYÎMÌ™ÝÛÜšÙ\œ×Ü[[YWÜÙËLKŽKŒË\LË[›Û™KX[žKÚ‹\ÚHœÚLMŽ˜ŒÎN™YŒXŽÌÌN˜™˜ÍNNŽXØÍŽYÍMÎMÙ˜ŒNLÙXYŒŒˆ‹Ú^™HHÎMMK\ØY][YHHŒŒ‹LLL•ŒNŒM‹ÖˆˆK—B
